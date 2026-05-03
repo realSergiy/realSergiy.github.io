@@ -20,6 +20,6 @@ Architectures: ${ARCH}
 Signed-By: /usr/share/keyrings/brave-browser-archive-keyring.gpg
 EOF
 
-echo "==> Installing Brave and Ansible"
+echo "==> Installing Brave and ansible-core"
 sudo apt update
-sudo apt install -y brave-browser ansible
+sudo apt install -y brave-browser ansible-core
