@@ -6,7 +6,10 @@ The landscape of technology entrepreneurship has undergone a profound phase tran
 Under Andrej Karpathy's three programming paradigms, Software 1.0 represents the traditional era of explicit, hand-coded instructions written directly into codebases. Software 2.0 marked the migration of capabilities to learned neural network weights, where developers shifted from writing code to curating datasets and loss functions, as seen in the transition of subsystems like Tesla's Autopilot. Software 3.0 represents a complete inversion, where natural language becomes the compile target and the primary programming interface. In this regime, Large Language Models serve as the runtime environment, and the task of development is relocated from manual syntax compilation to context orchestration, evaluation, and prompt-mediated verification.  
 This transition represents the practical fulfillment of Rich Sutton's *Bitter Lesson*. Sutton observed that over seven decades of artificial intelligence research, generalist approaches that scale with computational power consistently outperform methods built on handcrafted human domain knowledge. Whenever researchers attempt to build human-designed shortcuts or specific cognitive rules into a system, those interventions yield short-term performance gains but ultimately plateau, whereas exponential declines in compute costs allow simple search and learning algorithms to scale indefinitely.  
 The historical milestones of computer chess (Deep Blue's search-based victory over Kasparov in 1997\) and Go (AlphaGo Zero surpassing human expertise solely through self-play search and learning) serve as the structural blueprint for this shift. Computer vision has followed an identical trajectory, shifting from hand-engineered features like SIFT and HOG filters to deep convolutional networks and multimodal foundation models like CLIP, ALIGN, and Florence. Building in "how we think we think" has proven to be a long-term obstacle to progress.  
-The scaling laws identified by Kaplan et al. (2020) and refined by Hoffmann et al. (2022) established the mathematical foundation for this transformation, demonstrating that model performance is a power-law function of compute (C), dataset size (D), and parameter count (N):  
+The scaling laws identified by Kaplan et al. (2020) and refined by Hoffmann et al. (2022) established the mathematical foundation for this transformation, demonstrating that model performance is a power-law function of compute (C), dataset size (D), and parameter count (N):
+
+$$P \approx f(C, N, D)$$
+
 As training compute and inference efficiency continue to improve, the performance of these generalist systems climbs along a highly predictable trajectory.  
 Data from Stanford HAI's 2026 AI Index and the Anthropic Economic Index illustrate the velocity of this shift. On the SWE-bench Verified coding benchmark, task resolution rose from approximately 60% to near 100% in a single calendar year. Agentic performance on OSWorld, which tests models on unstructured computer tasks across operating systems, jumped from 12% to roughly 66%.  
 However, this rapid ascent has revealed a highly jagged capability frontier. Gemini Deep Think earned a gold medal at the International Mathematical Olympiad, yet leading models read analog clocks correctly only 50.1% of the time, illustrating that raw model weights do not scale linearly across all human cognitive domains.  
@@ -35,9 +38,19 @@ The older, problem-first tradition survives the transition because it addresses 
 In a world of infinite, instantly generated features, the value of raw execution commoditizes, elevating the strategic importance of human-centric inputs like domain depth, taste, and trust.  
 Venture-scale success is not determined by the speed at which code is generated, but by the founder’s capacity to identify highly acute pain points using frameworks like Rob Fitzpatrick’s *The Mom Test*, which relies on extracting authentic, unvarnished customer behaviors through non-leading dialogue.  
 Founder-market fit matters more, not less, when execution is automated; the developer who possesses deep domain insight can direct the Software 3.0 substrate to solve highly specific, previously unaddressed structural problems.  
-  `Customer Problem -> Manual Spec -> Months of Engineering -> Deployment -> Customer Feedback`
+*How does the product development cycle change between the Legacy era and the Software 3.0 era?*
 
-  `Earned Domain Context -> Natural Language Intent -> Real-Time Synthesis -> Automated Evaluation -> Instant Deployment`
+```mermaid
+flowchart TD
+    subgraph Legacy["Legacy Era"]
+        direction LR
+        L1[Customer Problem] --> L2[Manual Spec] --> L3[Months of Engineering] --> L4[Deployment] --> L5[Customer Feedback]
+    end
+    subgraph Modern["Software 3.0 Era"]
+        direction LR
+        M1[Earned Domain Context] --> M2[Natural Language Intent] --> M3[Real-Time Synthesis] --> M4[Automated Evaluation] --> M5[Instant Deployment]
+    end
+```
 
 However, the classic Lean Startup feedback loop—Build, Measure, Learn—bends under this new regime. When the "Build" phase of a product cycle drops from months of engineering to minutes of natural language prompting, the traditional sequence undergoes a structural compression.  
 Product development shifts from managing codebases to managing continuous evaluation frameworks and transcript analysis.  
@@ -53,20 +66,24 @@ The seam between legitimate capability-push and the classic "technology in searc
 ## **The New Defensibility Map: Seven Powers Re-Examined**
 
 To build a valuable, long-term enterprise, a founder must design for structural power. Hamilton Helmer's classic strategy text, *7 Powers*, identifies seven distinct sources of competitive advantage that enable a business to earn outsized returns. Each of these powers must be re-evaluated for the Software 3.0 era, specifically drawing the distinction between standard software-as-a-service (SaaS) and transaction-focused marketplace models.  
-                
 
-       `DURABILITY BOOSTED                      DURABILITY DEPRECIATED`  
-         
-   `+-------------------------+             +-------------------------+`  
-   `|  Counter-Positioning    |             |  Scale Economies        |`  
-   `|  (Outcome-based labor)  |             |  (Commoditized SaaS R&D)|`  
-   `+-------------------------+             +-------------------------+`  
-   `|  Switching Costs        |             |  Network Economies      |`  
-   `|  (Workflow integration) |             |  (Dissolved by A2A/MCP) |`  
-   `+-------------------------+             +-------------------------+`  
-   `|  Branding               |             |  Cornered Resources     |`  
-   `|  (Institutional trust)  |             |  (Standard datasets)    |`  
-   `+-------------------------+             +-------------------------+`
+*Which of the Seven Powers gain durability in the Software 3.0 era, and which lose it?*
+
+```mermaid
+flowchart LR
+    subgraph Boosted["Durability Boosted"]
+        direction TB
+        B1["Counter-Positioning<br/><i>Outcome-based labor</i>"]
+        B2["Switching Costs<br/><i>Workflow integration</i>"]
+        B3["Branding<br/><i>Institutional trust</i>"]
+    end
+    subgraph Depreciated["Durability Depreciated"]
+        direction TB
+        D1["Scale Economies<br/><i>Commoditized SaaS R&D</i>"]
+        D2["Network Economies<br/><i>Dissolved by A2A / MCP</i>"]
+        D3["Cornered Resources<br/><i>Standard datasets</i>"]
+    end
+```
 
 ### **Scale Economies**
 
@@ -117,20 +134,23 @@ In the late 2020s, process power belongs to the hyper-lean, high-velocity startu
 ## **Simon Wardley Mapping and the Utility Substrate**
 
 Simon Wardley’s mapping framework offers a powerful lens for visualizing the commoditization pipeline of the AI stack. Every technological component evolves through four distinct stages along the x-axis: Genesis (novel, custom-built), Custom, Product, and Commodity (utility). The y-axis represents the visibility of the component to the end-user.  
-`[ High User Visibility ]`  
-       `|`  
-       `v     User Needs (High-level Workflows)`  
-       `|            |`  
-       `|            v`  
-       `|     Orchestration & Workflow Layer (Cursor, Sierra)`  
-       `|            |`  
-       `|            v`  
-       `|     Infrastructure Layer (Open-Source Weights)`  
-       `|            |`  
-       `v            v`  
-`[ Low User Visibility ] (GPUs, Energy, Silicon)`  
-       `+---------------------------------------------+`  
-       `Genesis -> Custom -> Product -> Commodity (Wardley Evolution)`
+*Where does each layer of the AI stack sit on the visibility–evolution map?*
+
+```mermaid
+quadrantChart
+    title AI Stack Visibility vs Evolution
+    x-axis Genesis --> Commodity
+    y-axis Infrastructure --> User-Facing
+    quadrant-1 Mature user-facing
+    quadrant-2 Novel user-facing
+    quadrant-3 Custom infrastructure
+    quadrant-4 Commodity utility
+    "User Workflows": [0.88, 0.90]
+    "Orchestration Layer (Cursor, Sierra)": [0.55, 0.72]
+    "Foundation Models (commoditizing)": [0.72, 0.48]
+    "GPU Compute": [0.88, 0.22]
+    "Energy & Silicon": [0.95, 0.08]
+```
 
 In the late 2020s, foundation models have transitioned from the Custom-Built and Product stages into a highly commoditized utility layer. Under Simon Wardley's "Innovate, Leverage, Commoditize" (ILC) strategy, platforms create components, encourage an ecosystem to build on top of them, monitor usage to identify emerging patterns, and then commoditize those successful patterns as cheap, standardized features.  
 This cycle undercuts proprietary rivals and drives value upward. The models themselves have become the new standardized utility layer.  
@@ -211,9 +231,19 @@ The compounding test asks whether usage naturally generates a defensible data or
 
 Traditional unit testing is insufficient to guarantee reliability in non-deterministic systems. High-performing product teams have abandoned "vibe-driven" prompt iteration in favor of Eval-Driven Development (EDD).  
 The implementation of EDD follows three fundamental rules: first, start early by extracting the first twenty real-world failure traces from production logs and containerizing them as the baseline test suite ; second, grade the final outcome rather than the tool sequence path, as penalizing an agent for finding a creative, non-linear execution path creates brittle tests ; and third, manually read conversation transcripts to ensure agents are not succeeding for the wrong reasons, masking deep logical flaws.  
-`Traditional: -> [ Man[span_99](start_span)[span_99](end_span)ual Code ] -> ->`
+*How does the engineering loop change from traditional unit testing to Eval-Driven Development?*
 
-`AI-Native:   [ Prompt Intent ] -> [ Vibes Coding ] -> -> ->`
+```mermaid
+flowchart TD
+    subgraph Traditional["Traditional Loop"]
+        direction LR
+        T1[Spec] --> T2[Manual Code] --> T3[Unit Tests] --> T4[Deploy]
+    end
+    subgraph EDD["AI-Native Loop (Eval-Driven)"]
+        direction LR
+        E1[Prompt Intent] --> E2[Vibe Coding] --> E3["Eval Harness<br/>(production traces)"] --> E4[Transcript Review] --> E5[Deploy]
+    end
+```
 
 ### **Capability Budgeting**
 
@@ -253,7 +283,10 @@ For every $10 increase in hourly wage associated with a task, the share of conve
 ## **Critiques, Counter-Trends, and the Bubble Case**
 
 Any robust strategic framework must address the macroeconomic critiques of the current artificial intelligence wave. David Cahn of Sequoia Capital formulated the "$600 Billion Question" to highlight the massive gap between the revenue expectations implied by the global AI infrastructure build-out and the actual revenue generated by the AI application ecosystem.  
-To quantify this, Cahn formulated a simple back-of-the-envelope calculation :  
+To quantify this, Cahn formulated a simple back-of-the-envelope calculation:
+
+$$\text{Revenue Gap} = 2 \times \text{Nvidia Run-Rate Revenue} \times 2$$
+
 The first multiplier of 2 reflects the total cost of ownership (TCO) of AI data centers. GPUs represent only half of the cost; the other half includes energy, physical buildings, backup generators, and fiber networks.  
 The second multiplier of 2 reflects a necessary 50% gross margin for the end-users of the GPUs (the startups, enterprise customers, and cloud providers who lease compute and must earn a profit).  
 As of late 2025, this calculation indicated a $600 billion annual revenue gap that the industry must fill to justify the capital expenditure of the GPU build-out. This massive capital overhang introduces several critical strategic realities for founders:
@@ -327,4 +360,98 @@ The moment a breakthrough capability is identified, anchor it instantly inside a
 
 #### **Works cited**
 
-1\. The 2026 AI Index Report | Stanford HAI, https://hai.stanford.edu/ai-index/2026-ai-index-report 2\. What's Software 3.0? (Spoiler: You're Already Using It) \- Hugging Face, https://huggingface.co/blog/fdaudens/karpathy-software-3 3\. Software 1.0 vs 2.0 vs 3.0: How AI Is Rewriting the Rules of Programming \- MindStudio, https://www.mindstudio.ai/blog/software-1-0-2-0-3-0-ai-programming-paradigm 4\. Defining Aggregators – Stratechery by Ben Thompson, https://stratechery.com/2017/defining-aggregators/ 5\. Software 3.0 is powered by LLMs, prompts, and vibe coding \- what ..., https://www.zdnet.com/article/software-3-0-is-powered-by-llms-prompts-and-vibe-coding-what-you-need-know/ 6\. follow-builders/examples/sample-digest.md at main \- GitHub, https://github.com/zarazhangrui/follow-builders/blob/main/examples/sample-digest.md 7\. Bitter lesson \- Wikipedia, https://en.wikipedia.org/wiki/Bitter\_lesson 8\. Rich Sutton's bitter lesson of AI \- Applied Mathematics Consulting, https://www.johndcook.com/blog/2025/02/20/bitter-lesson/ 9\. The bitter truth of AI progress : r/deeplearning \- Reddit, https://www.reddit.com/r/deeplearning/comments/1i8qaud/the\_bitter\_truth\_of\_ai\_progress/ 10\. The Bitter Lesson \- Rich Sutton, http://www.incompleteideas.net/IncIdeas/BitterLesson.html 11\. Learning the Bitter Lesson: Empirical Evidence from 20 Years of CVPR Proceedings \- arXiv, https://arxiv.org/html/2410.09649v1 12\. Anthropic Economic Index report: Learning curves, https://www.anthropic.com/research/economic-index-march-2026-report 13\. Inside the AI Index: 12 Takeaways from the 2026 Report | Stanford HAI, https://hai.stanford.edu/news/inside-the-ai-index-12-takeaways-from-the-2026-report 14\. Economy | The 2026 AI Index Report | Stanford HAI, https://hai.stanford.edu/ai-index/2026-ai-index-report/economy 15\. Economy \- Stanford HAI, https://hai.stanford.edu/assets/files/ai\_index\_report\_2026\_chapter\_4\_economy.pdf 16\. The effect of AI on labour demand: a critical assessment of 'Power and Progress' by Acemoglu and Johnson \- ResearchGate, https://www.researchgate.net/publication/402070802\_The\_effect\_of\_AI\_on\_labour\_demand\_a\_critical\_assessment\_of\_'Power\_and\_Progress'\_by\_Acemoglu\_and\_Johnson 17\. Creation, validation, obsolescence: observed evidence of AI-driven labor market displacement, 2020–2025 \- Frontiers, https://www.frontiersin.org/journals/human-dynamics/articles/10.3389/fhumd.2026.1815037/full 18\. Influence of Artificial Intelligence (CD.A) \- Talking About Organizations Podcast, https://www.talkingaboutorganizations.com/resources/aisle-c-management-topics/rack-cd-digital-transformation-and-future-of-work/influence-of-artificial-intelligence-cd-a/ 19\. Perspectives — Substantial, https://www.substantial.com/perspectives?filter=in-practice 20\. AI's $600B Question | Sequoia Capital, https://sequoiacap.com/article/ais-600b-question/ 21\. Generative AI's Act Two | Sequoia Capital, https://sequoiacap.com/article/generative-ai-act-two/ 22\. The AI Hype: $600B question or $4.6T+ opportunity? \- Foundation Capital, https://foundationcapital.com/ideas/the-ai-hype-600b-question-or-4-6t-opportunity 23\. Innovate, Leverage, Commoditize (ILC) \- Wardley Leadership Strategies, https://www.wardleyleadershipstrategies.com/strategies/ecosystem/innovate-leverage-commoditize 24\. The One-Person Billion-Dollar Company: A Solopreneur's Playbook ..., https://stormy.ai/blog/one-person-billion-dollar-company-playbook 25\. 7 Powers Framework: how to establish your competitive moat \- Hustle Badger, https://www.hustlebadger.com/what-do-product-teams-do/7-powers-establishing-your-competitive-moat/ 26\. The seven powers in the age of AI. \- European Internet Ventures, https://www.europeaninternetventures.com/articles/seven-powers-ai 27\. Eval Driven Development For Reliable AI Agents \#systemdesign \#aiagents \#anthropic, https://www.youtube.com/watch?v=GuMVcpUWgBE 28\. SDLC AI Radar 2026 \- LTM, https://www.ltm.com/insights/reports/sdlc-ai-radar-2026 29\. The Death of SaaS: How Pay-Per-Result AI Agents Will Replace ..., https://medium.com/@yangxu\_16238/the-death-of-saas-how-pay-per-result-ai-agents-will-replace-500b-in-software-0c9af32f7a0d 30\. Strategy-Bot: Chat GPT \- Richard Ian Porter, https://richardiporter.com/strategy-bot-chat-gpt/ 31\. How to Think Like a VC Part VI: Business and Investment Strategy | by Nicholas Moryl, https://nmoryl.com/how-to-think-like-a-vc-part-vi-business-and-investment-strategy-1a0563a8fa6c 32\. 7 Powers: Hamilton Helmer's Strategy Framework \- Aydoo Services, https://aydoo.services/en/articles/7-powers-hamilton-helmer/ 33\. 10 Best Sierra AI Alternatives for 2026 \- Parloa, https://www.parloa.com/knowledge-hub/sierra-ai-alternatives/ 34\. Best AI Support Agent Providers: 7 Platforms Compared \[2026 Comparison\] | Fini Labs, https://www.usefini.com/guides/best-ai-support-agent-providers-platforms-compared 35\. Claude Code \+ Analytics \= Vibe PMing \- Product Growth \- Aakash Gupta, https://www.news.aakashg.com/p/frank-lee-podcast 36\. The Rise of the One-Person Billion-Dollar Company: Sam Altman's Take \- Startup Bell, https://www.startupbell.net/post/the-rise-of-the-one-person-billion-dollar-company-sam-altman-s-take 37\. Refining strategy with Wardley Mapping. | Irrational Exuberance \- Lethain.com, https://lethain.com/wardley-mapping/ 38\. Mapping 101: A Beginner's Guide \- Strategic Guide | Wardley Maps, https://www.wardleymaps.com/guides/wardley-mapping-101 39\. Accelerators | Wardley Leadership Strategies, https://www.wardleyleadershipstrategies.com/strategies/accelerators 40\. Aggregation Theory – Stratechery by Ben Thompson, https://stratechery.com/2015/aggregation-theory/ 41\. Stratechery: Aggregation Theory \- tl;dr sec, https://tldrsec.com/p/blog-stratechery-aggregation-theory 42\. Sierra raises $950M Series E at $15.8B valuation | Let's Data Science, https://letsdatascience.com/news/sierra-raises-950m-series-e-at-158b-valuation-823fdd5c 43\. How AI Creates $1B One-Person Company | Solo Founders \- Orbilon Technologies, https://orbilontech.com/ai-automation-1b-one-person-company/ 44\. Sierra AI Pricing 2026: Plans, Costs & Is It Worth It? \- CallBotics, https://callbotics.ai/blog/sierra-ai-pricing 45\. The One-person Billion-dollar Company \- Every, https://every.to/napkin-math/the-one-person-billion-dollar-company 46\. Why ROI for GenAI is Hard: Part 1 \- ThetaRho, https://www.thetarho.ai/blog/why-roi-for-genai-is-hard-part-1 47\. AI \- Christoph Bussler, https://real-programmer.com/pages/ai.html 48\. How the development of ChatGPT slowly killed Chegg. I watched it happen live as an employee : r/OpenAI \- Reddit, https://www.reddit.com/r/OpenAI/comments/1rzcikg/how\_the\_development\_of\_chatgpt\_slowly\_killed/
+[^1]: The 2026 AI Index Report | Stanford HAI, <https://hai.stanford.edu/ai-index/2026-ai-index-report>
+
+[^2]: What's Software 3.0? (Spoiler: You're Already Using It) \- Hugging Face, <https://huggingface.co/blog/fdaudens/karpathy-software-3>
+
+[^3]: Software 1.0 vs 2.0 vs 3.0: How AI Is Rewriting the Rules of Programming \- MindStudio, <https://www.mindstudio.ai/blog/software-1-0-2-0-3-0-ai-programming-paradigm>
+
+[^4]: Defining Aggregators – Stratechery by Ben Thompson, <https://stratechery.com/2017/defining-aggregators/>
+
+[^5]: Software 3.0 is powered by LLMs, prompts, and vibe coding \- what ..., <https://www.zdnet.com/article/software-3-0-is-powered-by-llms-prompts-and-vibe-coding-what-you-need-know/>
+
+[^6]: follow-builders/examples/sample-digest.md at main \- GitHub, <https://github.com/zarazhangrui/follow-builders/blob/main/examples/sample-digest.md>
+
+[^7]: Bitter lesson \- Wikipedia, <https://en.wikipedia.org/wiki/Bitter>\_lesson
+
+[^8]: Rich Sutton's bitter lesson of AI \- Applied Mathematics Consulting, <https://www.johndcook.com/blog/2025/02/20/bitter-lesson/>
+
+[^9]: The bitter truth of AI progress : r/deeplearning \- Reddit, <https://www.reddit.com/r/deeplearning/comments/1i8qaud/the>\_bitter\_truth\_of\_ai\_progress/
+
+[^10]: The Bitter Lesson \- Rich Sutton, <http://www.incompleteideas.net/IncIdeas/BitterLesson.html>
+
+[^11]: Learning the Bitter Lesson: Empirical Evidence from 20 Years of CVPR Proceedings \- arXiv, <https://arxiv.org/html/2410.09649v1>
+
+[^12]: Anthropic Economic Index report: Learning curves, <https://www.anthropic.com/research/economic-index-march-2026-report>
+
+[^13]: Inside the AI Index: 12 Takeaways from the 2026 Report | Stanford HAI, <https://hai.stanford.edu/news/inside-the-ai-index-12-takeaways-from-the-2026-report>
+
+[^14]: Economy | The 2026 AI Index Report | Stanford HAI, <https://hai.stanford.edu/ai-index/2026-ai-index-report/economy>
+
+[^15]: Economy \- Stanford HAI, <https://hai.stanford.edu/assets/files/ai>\_index\_report\_2026\_chapter\_4\_economy.pdf
+
+[^16]: The effect of AI on labour demand: a critical assessment of 'Power and Progress' by Acemoglu and Johnson \- ResearchGate, <https://www.researchgate.net/publication/402070802>\_The\_effect\_of\_AI\_on\_labour\_demand\_a\_critical\_assessment\_of\_'Power\_and\_Progress'\_by\_Acemoglu\_and\_Johnson
+
+[^17]: Creation, validation, obsolescence: observed evidence of AI-driven labor market displacement, 2020–2025 \- Frontiers, <https://www.frontiersin.org/journals/human-dynamics/articles/10.3389/fhumd.2026.1815037/full>
+
+[^18]: Influence of Artificial Intelligence (CD.A) \- Talking About Organizations Podcast, <https://www.talkingaboutorganizations.com/resources/aisle-c-management-topics/rack-cd-digital-transformation-and-future-of-work/influence-of-artificial-intelligence-cd-a/>
+
+[^19]: Perspectives — Substantial, <https://www.substantial.com/perspectives?filter=in-practice>
+
+[^20]: AI's $600B Question | Sequoia Capital, <https://sequoiacap.com/article/ais-600b-question/>
+
+[^21]: Generative AI's Act Two | Sequoia Capital, <https://sequoiacap.com/article/generative-ai-act-two/>
+
+[^22]: The AI Hype: $600B question or $4.6T+ opportunity? \- Foundation Capital, <https://foundationcapital.com/ideas/the-ai-hype-600b-question-or-4-6t-opportunity>
+
+[^23]: Innovate, Leverage, Commoditize (ILC) \- Wardley Leadership Strategies, <https://www.wardleyleadershipstrategies.com/strategies/ecosystem/innovate-leverage-commoditize>
+
+[^24]: The One-Person Billion-Dollar Company: A Solopreneur's Playbook ..., <https://stormy.ai/blog/one-person-billion-dollar-company-playbook>
+
+[^25]: 7 Powers Framework: how to establish your competitive moat \- Hustle Badger, <https://www.hustlebadger.com/what-do-product-teams-do/7-powers-establishing-your-competitive-moat/>
+
+[^26]: The seven powers in the age of AI. \- European Internet Ventures, <https://www.europeaninternetventures.com/articles/seven-powers-ai>
+
+[^27]: Eval Driven Development For Reliable AI Agents \#systemdesign \#aiagents \#anthropic, <https://www.youtube.com/watch?v=GuMVcpUWgBE>
+
+[^28]: SDLC AI Radar 2026 \- LTM, <https://www.ltm.com/insights/reports/sdlc-ai-radar-2026>
+
+[^29]: The Death of SaaS: How Pay-Per-Result AI Agents Will Replace ..., <https://medium.com/@yangxu>\_16238/the-death-of-saas-how-pay-per-result-ai-agents-will-replace-500b-in-software-0c9af32f7a0d
+
+[^30]: Strategy-Bot: Chat GPT \- Richard Ian Porter, <https://richardiporter.com/strategy-bot-chat-gpt/>
+
+[^31]: How to Think Like a VC Part VI: Business and Investment Strategy | by Nicholas Moryl, <https://nmoryl.com/how-to-think-like-a-vc-part-vi-business-and-investment-strategy-1a0563a8fa6c>
+
+[^32]: 7 Powers: Hamilton Helmer's Strategy Framework \- Aydoo Services, <https://aydoo.services/en/articles/7-powers-hamilton-helmer/>
+
+[^33]: 10 Best Sierra AI Alternatives for 2026 \- Parloa, <https://www.parloa.com/knowledge-hub/sierra-ai-alternatives/>
+
+[^34]: Best AI Support Agent Providers: 7 Platforms Compared \[2026 Comparison\] | Fini Labs, <https://www.usefini.com/guides/best-ai-support-agent-providers-platforms-compared>
+
+[^35]: Claude Code \+ Analytics \= Vibe PMing \- Product Growth \- Aakash Gupta, <https://www.news.aakashg.com/p/frank-lee-podcast>
+
+[^36]: The Rise of the One-Person Billion-Dollar Company: Sam Altman's Take \- Startup Bell, <https://www.startupbell.net/post/the-rise-of-the-one-person-billion-dollar-company-sam-altman-s-take>
+
+[^37]: Refining strategy with Wardley Mapping. | Irrational Exuberance \- Lethain.com, <https://lethain.com/wardley-mapping/>
+
+[^38]: Mapping 101: A Beginner's Guide \- Strategic Guide | Wardley Maps, <https://www.wardleymaps.com/guides/wardley-mapping-101>
+
+[^39]: Accelerators | Wardley Leadership Strategies, <https://www.wardleyleadershipstrategies.com/strategies/accelerators>
+
+[^40]: Aggregation Theory – Stratechery by Ben Thompson, <https://stratechery.com/2015/aggregation-theory/>
+
+[^41]: Stratechery: Aggregation Theory \- tl;dr sec, <https://tldrsec.com/p/blog-stratechery-aggregation-theory>
+
+[^42]: Sierra raises $950M Series E at $15.8B valuation | Let's Data Science, <https://letsdatascience.com/news/sierra-raises-950m-series-e-at-158b-valuation-823fdd5c>
+
+[^43]: How AI Creates $1B One-Person Company | Solo Founders \- Orbilon Technologies, <https://orbilontech.com/ai-automation-1b-one-person-company/>
+
+[^44]: Sierra AI Pricing 2026: Plans, Costs & Is It Worth It? \- CallBotics, <https://callbotics.ai/blog/sierra-ai-pricing>
+
+[^45]: The One-person Billion-dollar Company \- Every, <https://every.to/napkin-math/the-one-person-billion-dollar-company>
+
+[^46]: Why ROI for GenAI is Hard: Part 1 \- ThetaRho, <https://www.thetarho.ai/blog/why-roi-for-genai-is-hard-part-1>
+
+[^47]: AI \- Christoph Bussler, <https://real-programmer.com/pages/ai.html>
+
+[^48]: How the development of ChatGPT slowly killed Chegg. I watched it happen live as an employee : r/OpenAI \- Reddit, <https://www.reddit.com/r/OpenAI/comments/1rzcikg/how>\_the\_development\_of\_chatgpt\_slowly\_killed/

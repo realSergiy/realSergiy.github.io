@@ -1,10 +1,6 @@
 # Working Backwards from a Moving Target
 ## A Startup Philosophy for the Late 2020s
 
-*May 2026*
-
----
-
 ### I. The premise, and what is no longer in question
 
 The older tradition has not been refuted. It has been put under stress.
@@ -30,6 +26,20 @@ Beneath Karpathy sits Richard Sutton's 2019 essay *The Bitter Lesson*. *"The big
 The bitter lesson is a research-program claim, but it has become an operating-strategy claim for founders. If the next foundation model is going to absorb your handcrafted feature, your handcrafted feature is not a moat — it is a debt. The scaling-law papers (Kaplan et al. 2020, Hoffmann et al. 2022 on Chinchilla) gave this an economic shape: model loss falls predictably with compute, parameters, and tokens, so capability is, to a first approximation, a function of capital and substrate availability. DeepSeek's R1 disclosure in January 2025 — and the more careful Nature paper of September 2025 that put R1's final training run at $294,000 across 512 H800s, atop a base model that itself cost roughly $5.6 million in compute — did not refute the scaling story so much as reveal that the cost curve was steeper on the way down than most operators had budgeted. The lab whose model you sit on top of can become 10× cheaper between your seed and your Series A.
 
 Carlota Perez's *Technological Revolutions and Financial Capital* (2002) gives this a longer historical frame. Her sequence — Irruption, Frenzy, Turning Point, Synergy, Maturity — separates the *Installation* period of a technological revolution (driven by financial capital, ending in a bubble and a crash) from the *Deployment* period (driven by production capital, the "golden age"). In Perez's words from the Frenzy chapter: *"Financial capital reigns arrogant and production capital has no alternative but to adapt to the new rules; some agents with glee, others with horror."* The five great surges she identifies — the Industrial Revolution; Steam and Railways; Steel and Electricity; Oil, Cars and Mass Production; Information and Telecommunications — each took roughly half a century from irruption to maturity, with the bubble-and-crash typically falling in the second decade. By Perez's clock, AI is somewhere mid-Frenzy. David Cahn's "AI's $200B Question" (September 2023), updated to "$600B" by June 2024, is the Perez framework expressed as a Sequoia memo: the gap between AI infrastructure capex and end-user revenue is too large to be sustained without either a major deflation in compute or a major inflation in monetizable value, probably both.
+
+*Where AI sits in Carlota Perez's surge pattern in mid-2026.*
+
+```mermaid
+timeline
+    section Installation period (financial capital)
+        2017–2022 : Irruption — Transformer paper to ChatGPT launch
+        2022–2027 : Frenzy — bubble forms, capex outruns revenue
+    section Turning Point
+        2026–2028 : Correction — capital rationalizes, weak players fail
+    section Deployment period (production capital)
+        2028–2040 : Synergy — broad deployment, golden age
+        2040 onward : Maturity — saturation, next surge gestates
+```
 
 The Bitter Lesson and Perez are not in tension. They are the same story told at two timescales. Sutton tells you what wins technically (general methods scaled with compute). Perez tells you what happens economically when general methods scaled with compute attract financial capital faster than production capital can absorb them. Both imply, for the founder, the same operating posture: you are building on a substrate that is simultaneously deflating in unit cost and inflating in capability, inside an investor regime that has not yet rationalized either. Your job is to identify what *that substrate cannot do for the customer on its own* and to build a product whose value comes from the part the substrate cannot do.
 
@@ -95,6 +105,17 @@ The most useful synthesis is to imagine the value stack as four layers:
 - **Distribution layer:** the channels that put the product in front of the customer. Owned mostly by incumbents and a small number of native aggregators.
 - **Trust/brand layer:** the willingness of a consequential buyer to delegate authority to your product. The rarest and slowest-built layer, and increasingly the binding constraint on enterprise revenue.
 
+*Where durable advantage lives in the late-2020s value stack.*
+
+```mermaid
+block
+  columns 1
+  trust["Trust / Brand — consequential buyer delegates authority. Rarest, slowest-built."]
+  distribution["Distribution — channels owning the user relationship."]
+  workflow["Workflow — integrated product doing a specific job. Where most application-layer value accrues."]
+  model["Model — frontier foundation model. Rented. Commoditizing."]
+```
+
 Durable advantage in the late 2020s lives mostly at the intersection of workflow and trust, with a leg into distribution. The model layer is rented. That is the new map.
 
 ### VI. The strategic option set, examined honestly
@@ -115,6 +136,17 @@ Five paths are open to a founder in mid-2026. Each has conditions under which it
 
 The single most useful concept the era has produced is the *capability ratchet*: the next model release moves underneath your product, sometimes lifting it, sometimes destroying it. The Jasper case is the canonical destruction (the next OpenAI release made its core value proposition free); Cursor is the canonical lift (every model upgrade makes Cursor better, because Cursor is the harness, not the engine). The difference is structural, not lucky. Cursor is positioned so that capability gains accrue to its product; Jasper was positioned so that capability gains accrued to its substrate.
 
+*Before shipping any feature, ask whether the next model release lifts your product or eats it.*
+
+```mermaid
+flowchart TD
+    A["Next foundation model ships,<br/>say 30% better next quarter"] --> B{"Where does the<br/>capability gain accrue?"}
+    B -->|"To your product"| C["LIFT<br/>You are the harness, not the engine"]
+    B -->|"To the substrate"| D["DESTRUCTION<br/>You are a thin wrapper"]
+    C --> E["Cursor, Perplexity, Harvey,<br/>Sierra, Granola, Glean"]
+    D --> F["Jasper, CheggMate, Pi,<br/>much of YC W23 to W24"]
+```
+
 Out of this distinction the serious founders have converged on a small set of explicit tests. They are worth quoting in shorthand because in 2026 they get used as actual decision tools.
 
 - **The GPT-N+1 test.** If OpenAI / Anthropic / Google ships a model 30% better next quarter, does your product get *better* or get *replaced*? Better: you are a harness. Replaced: you are a thin wrapper.
@@ -131,6 +163,24 @@ The replacement for spec-driven development is **eval-driven development**: you 
 ### VIII. The graveyard
 
 Each of the dead has a specific lesson. The gloss "wrappers are bad" is too cheap.
+
+*Selected casualties of the capability ratchet, by quarter.*
+
+```mermaid
+timeline
+    section 2022
+        Oct : Jasper raises at $1.5B valuation (peak)
+    section 2023
+        Mar : ChatGPT begins eroding Chegg subscribers
+        May : Chegg loses 48.4% in one day
+        Jul : Jasper layoffs
+        Sep : Jasper 20% valuation cut; CEO and CTO depart
+    section 2024
+        Mar : Inflection and Pi unwound to Microsoft (~$650M)
+        Aug : Character.ai unwound to Google (~$2.7B)
+    section 2025
+        Dec : Stack Overflow questions down 78% YoY
+```
 
 **Jasper AI.** Founded January 2021 as a GPT-3-powered marketing-copy assistant. $1.5B valuation October 2022, layoffs July 2023, internal valuation cut 20% by September 2023, founders displaced, slow grind down. *Lesson:* if your wedge is a UI on top of a capability the underlying lab will give away for free in the next general release, the lab will give it away in the next general release. Marketing copy was a vitamin, not a painkiller; ChatGPT solved the vitamin job at zero marginal cost.
 
