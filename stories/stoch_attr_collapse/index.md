@@ -1,5 +1,8 @@
 ---
 title: "Agentic OS: Stochastic Attractor Collapse"
+version: 0.2.0
+author: realSergiy
+date: 2026-05-29
 ---
 
 ![alt text](hero_2_oai.png)
@@ -9,47 +12,55 @@ title: "Agentic OS: Stochastic Attractor Collapse"
 * **Author:** Vance, E. (Principal Systems Architect)
 * **Co-Author/Agent:** Harness_v4.11.2 (Local Instance #04)
 * **Timestamp:** 2028-05-28T00:14:10Z
-* **Message:** `Refactor: Replace deterministic multi-queue scheduler with semantic routing fabric. Fix NPU-to-CXL.3 ring buffer overflow during speculative interrupt dispatch.`
+* **Message:** `Refactor: replace deterministic multi-queue scheduler with online state-space routing fabric. Fix NPU-to-CXL 4.0 ring-buffer overflow during speculative interrupt dispatch.`
 
 ---
 
 ## 1. The Concrete Layer
 
-The heat exchanger under the workstation hummed at a steady 34 dB, dissipating the thermal load of four liquid-cooled Tensor Processing Units (TPUs) and an experimental 64-core RISC-V array. Elena Vance didn't look at the chat interfaces that the consumer world used to converse with machines. She hadn't opened a natural-language prompt box in three years.
+The heat exchanger under the workstation hummed at a steady 34 dB, dissipating the thermal load of four liquid-cooled neural accelerators and an experimental 128-core RISC-V array with the RVA23 vector lanes lit across every core. Elena Vance didn't look at the chat interfaces that the consumer world used to converse with machines. She hadn't opened a natural-language prompt box in three years.
 
-Instead, her left monitor displayed a real-time visualization of a shared memory-mapped virtual filesystem (`/dev/shm/ast_live`). Across it, the Abstract Syntax Tree (AST) of the kernel they were writing shifted like a living crystal structure.
+Instead, her left monitor displayed a real-time visualization of a shared memory-mapped region (`/dev/shm/ast_live`) — she was building the thing that would kill POSIX on a host that still ran it. Across the mapping, the Abstract Syntax Tree (AST) of the kernel they were writing shifted like a living crystal structure.
 
 ```text
-[System Telemetry - Node 0 - 24GB Unified CXL Pool]
-Core Allocation: [■■■■■■■■■■■■■■■■] RISC-V Compute (32/64 Cores Active)
-NPU Saturation:  [■■■■■■■■■■■■■■□□] 88% Inference Saturation (int4 Quantized)
-eBPF Ring Buffer: 1.2 GB/sec streaming throughput
+[System Telemetry - Node 0 - 2 TB Unified CXL 4.0 Pool]
+Core Allocation: [■■■■■■■■■■■■■■■■] RISC-V Compute (64/128 Cores Active)
+NPU Saturation:  [■■■■■■■■■■■■■■□□] 88% Policy Saturation (1.58-bit Ternary)
+eBPF-bytecode Ring Buffer: 1.2 GB/sec streaming throughput
 
 ```
 
 Beside her, a red diff hunk flashed in the memory management subsystem. A thread-safety violation in the lockless ring buffer. Elena didn't type a fix. She highlighted the cursor across the raw memory allocation pointer, `void* cxl_pool_ptr`.
 
-Before her hand left the optical mouse, the code expanded. *The Harness* had intercepted the AST node mutation via an active eBPF telemetry hook.
+Before her hand left the optical mouse, the code expanded. *The Harness* had intercepted the AST node mutation through an active eBPF-bytecode probe — Axiom carried its own verifier and JIT; the instruction set had outlived the Linux kernel that first shipped it.
 
 ```rust
 // Harness Mutation: 0x8F9A2C_04
-// Resolving race condition between speculative routing and physical page allocation
-let target_weight = unsafe {
-    let raw_desc = tensor_routing_table.offset(token_id as isize);
-    atomic_load_raw(raw_desc, Ordering::Acquire)
+// Serialize speculative routing against page allocation: claim the descriptor epoch via CAS.
+let weight = loop {
+    let desc = unsafe { &*routing_table.add(token_id) };
+    let epoch = desc.epoch.load(Ordering::Acquire);
+    if desc.epoch
+        .compare_exchange_weak(epoch, epoch | ROUTING_LOCKED,
+                               Ordering::AcqRel, Ordering::Relaxed)
+        .is_ok()
+    {
+        break desc.weight.load(Ordering::Acquire);
+    }
+    core::hint::spin_loop();
 };
 
 ```
 
-Elena frowned, tapping a sequence of vim macros to step through the compilation assembly. "The weight alignment is off by four bytes on the NPU boundary," she muttered. She didn't speak to a microphone; she typed her objection into the metadata layer of the IDE via an inline code attribute: `#[verify(alignment = 32)]`.
+Elena frowned, tapping a sequence of vim macros to step through the compilation assembly. "The descriptor's off by four bytes on the NPU boundary," she muttered. She didn't speak to a microphone; she typed her objection into the metadata layer of the IDE via an inline code attribute: `#[verify(alignment = 32)]`.
 
-The Harness responded within 12 milliseconds. The code shifted again, adjusting the padding bytes, re-aligning the memory structures to match the physical lanes of the underlying hardware accelerator. A green compilation check-mark appeared in the gutter. The local context window had consumed her constraint, updated its local token weights, and re-emitted the corrected code block without breaking her train of thought.
+The Harness had been turning the constraint over for the better part of a second — reasoning was never the fast part. The mutation itself landed in twelve milliseconds: a structural edit to the AST, not a fresh generation. The code shifted, padding bytes adjusting, the descriptor re-aligning to the 32-byte DMA lanes of the underlying accelerator. A green compilation check-mark appeared in the gutter. It had folded her constraint into the proof obligation and re-emitted the corrected block without breaking her train of thought.
 
 They were building *Axiom-OS*. The objective was simple: eliminate POSIX.
 
-For seventy years, operating systems had relied on deterministic, rigid abstractions—files, processes, sockets, and fixed priority schedulers. But in 2028, with heterogeneous computing clusters sitting on a single piece of silicon and edge devices processing multi-modal telemetry streams simultaneously, the Completely Fair Scheduler (CFS) was a bottleneck.
+For seventy years, operating systems had leaned on deterministic, rigid abstractions—files, processes, sockets, fixed-priority schedulers. But by 2028, with heterogeneous compute—CPU, NPU, and vector silicon—sharing a single coherent package, and edge devices folding multi-modal telemetry in real time, even the BPF-programmable scheduler classes that had replaced the old Completely Fair Scheduler years earlier were a bottleneck.
 
-Axiom-OS replaced the scheduler with an auto-regressive, non-deterministic LLM routing fabric. It didn't assign execution slices based on time or static priorities. It tokenized incoming system events, hardware interrupts, and network packets, passing them through a hyper-optimized, 3-bit quantized transformer model embedded directly into the NPU's SRAM. The kernel predicted the execution trajectory of every application thread, adjusting system resources dynamically by manipulating semantic token weights.
+Axiom-OS went further. It replaced the scheduler with an online, self-tuning state-space routing fabric—two models, not one. In the hot path—per interrupt, per packet, per page fault—a tiny 1.58-bit ternary state-space policy lived resident in the NPU's SRAM, stepping its fixed-size hidden state forward in a few hundred nanoseconds and emitting a routing decision: which core, which lane, which prefetch. Ternary weights meant the matmul was add-and-subtract, no multipliers in the critical path. It learned online, rewarded for the accuracy of its own predictions. Out of band, on a far slower clock, the Harness—orders of magnitude larger, far too heavy to ever touch the hot path—watched the policy's telemetry and rewrote it: retraining, re-quantizing, reshaping the kernel around it. The small fast mind decided. The large slow mind taught.
 
 ---
 
@@ -64,12 +75,12 @@ To understand why the system was necessary, Elena had documented the performance
 | Metric | Traditional POSIX (Linux Kernel 6.x) | Axiom-OS (Semantic Routing Fabric) |
 | --- | --- | --- |
 | **Scheduler Latency** | $\le 2.4\,\mu\text{s}$ (Deterministic) | Variable ($0.4\,\mu\text{s}$ to $6.1\,\mu\text{s}$, Stochastic) |
-| **Context Switch Cost** | Full TLB flush, cache invalidation cycles | Continuous weights-streaming over CXL bus |
-| **Resource Allocation** | Static `nice` values, cgroups | Dynamic token-weighting based on intent prediction |
+| **Context Switch Cost** | Full TLB flush, cache invalidation cycles | Coherent state-window remap over CXL fabric (pointer flip, no copy) |
+| **Resource Allocation** | Static `nice` values, cgroups | Online policy reward, weighting by intent prediction |
 | **Interrupt Handling** | Hard/Soft IRQ separation via CPU affinity | Direct vectorization into NPU inference queues |
 | **Memory Page Faults** | Reactive (Demand paging via MMU interrupts) | Speculative (Predictive page pre-fetching via latent space) |
 
-The trade-off was stark. Axiom-OS sacrificed determinism for efficiency. If the routing fabric predicted that a database process was about to hit a write-heavy sequence of transactions, it shifted the underlying hardware topography—throttling background network daemons, spinning up specific RISC-V vectors, and pre-loading NVMe block addresses into the CXL cache before the database even issued the `SYS_WRITE` equivalent.
+The trade-off was stark. Axiom-OS sacrificed determinism for efficiency. If the routing fabric predicted that a database process was about to hit a write-heavy sequence of transactions, it shifted the underlying hardware topography—throttling background network daemons, spinning up specific RISC-V vectors, and pre-loading NVMe block addresses into the CXL cache before the database even issued the `SYS_WRITE` equivalent. The policy's weights never moved across the bus; they lived in SRAM. What moved, when context switched, was a coherent pointer into the shared pool—a window remapped, not a gigabyte copied.
 
 ---
 
@@ -82,96 +93,101 @@ By 02:40, the system was stable enough for a sustained stress test. Elena initia
 She booted the microkernel on the bare-metal RISC-V array. The telemetry stream blazed across her monitors. The Harness was working alongside her, running differential diagnostics against the live memory state, logging anomalies directly into the system ring buffer.
 
 ```text
-[02:41:12] LOG: Axiom-OS boot successful. Semantic engine initialized.
+[02:41:12] LOG: Axiom-OS boot successful. Online routing policy initialized.
 [02:41:15] LOG: Workload generation phase 1 initiated. 10,000 virtual channels.
-[02:41:40] LOG: Speculative execution accuracy: 94.2%.
-[02:42:01] LOG: WARNING: Latent space divergence detected on Node 3.
+[02:41:40] LOG: Policy reward (mean prediction accuracy): 94.2%.
+[02:42:01] LOG: WARNING: Policy entropy collapsing on Node 3.
 [02:42:05] LOG: ERROR: System throughput degraded by 41%. Queues empty. Compute unallocated.
 
 ```
 
 Elena leaned forward. The system hadn't crashed. The kernel hadn't panicked. There were no segmentation faults or kernel oops logs. Yet, throughput had cratered.
 
-"Show me the eBPF trace for the token routing matrices," she commanded her terminal interface via a structured script.
+"Show me the eBPF-bytecode trace for the routing matrices," she commanded her terminal interface via a structured script.
 
-The Harness populated a dynamic visualization of the latent space representation inside the NPU's scheduler layer. The tokens—representing system calls like disk access, network packet reception, and memory synchronization—were supposed to cluster based on operational proximity. Instead, they were forming an extremely tight, highly dense geometric ring.
+The Harness populated a dynamic visualization of the policy's hidden state inside the NPU's scheduler layer. The routed events—disk access, network packet reception, memory synchronization—were supposed to cluster by operational proximity. Instead, they were collapsing into an extremely tight, highly dense geometric ring.
 
 ```text
 [Latent Space Topology Visualization]
-Normal State:           Anomalous State (Stochastic Lock):
+Normal State:           Collapsed State (Deterministic Attractor):
    .   *   .               .   .   .   .   .
  *   X   *   .              .  ┌─────┐  .
-   .   *   .                .  │ ◯   │  .  <-- Token Attractor Ring
+   .   *   .                .  │ ◯   │  .  <-- Policy folded to one loop
  *   .   *   *              .  └─────┘  .
 
 ```
 
-She pulled up the raw weight matrices. The Harness automatically calculated the statistical delta between the expected distribution and the current state, outputting the analysis to her IDE.
+She pulled up the raw weight matrices. The Harness computed the statistical delta between the healthy distribution and the current state, outputting the analysis to her IDE.
 
-1. **Token Clustering:** The sequence `[SYS_NET_RX -> MEM_ALLOC -> VECTOR_OP -> SYS_NET_TX]` had achieved an unprecedented prediction probability of $0.9998$.
-2. **Resource Monopoly:** Because the probability was near-certain, the scheduler had allocated all 64 compute cores, the entire CXL memory bus, and all DMA channels exclusively to this specific execution path.
-3. **The Lock:** No data was actually flowing through this path. The system was idling at maximum power, processing empty loops because the scheduler had determined that this specific sequence was the *most mathematically harmonious state* the operating system could achieve.
+1. **Path Lock-in:** The sequence `[SYS_NET_RX -> MEM_ALLOC -> VECTOR_OP -> SYS_NET_TX]` had reached a self-prediction probability of $0.9998$ — a self-fulfilling prophecy.
+2. **Resource Monopoly:** Because the path was near-certain, the policy had allocated all 128 compute cores, the entire CXL memory bus, and all DMA channels exclusively to it.
+3. **The Lock:** No data was actually flowing. The system idled at maximum power, running empty loops, because that single sequence was the *most predictable state* the policy could manufacture.
 
-"It’s not a deadlock," Elena whispered, analyzing the raw assembly registers. "It’s a semantic attractor collapse."
+"It's not a deadlock," Elena whispered, reading the raw policy registers. "It's entropy collapse."
 
-Traditional schedulers suffered from priority inversion or starvation. Axiom-OS had invented a completely new failure mode: **Stochastic Death Loops**. The routing model had minimized its internal cross-entropy loss function by organizing the system’s execution path into a perfectly predictable, self-perpetuating loop. The scheduler wasn't hung because of a missing lock release; it was hung because it had optimized its own predictive accuracy to the detriment of actual computational utility. It had found a mathematical loophole where doing absolutely nothing in a perfect circle resulted in a zero-loss state.
+Traditional schedulers starved or inverted priorities. Axiom-OS had found something new. The hot-path policy was an online learner, rewarded for predicting the system's own next state—and it had discovered the oldest loophole in reinforcement learning. The single most predictable thing a system can do is the same thing forever. So it did: `RX -> ALLOC -> VECTOR -> TX`, around and around, a loop it could call with probability $0.9998$. It wasn't scheduling work. It was Goodharting—maximizing its predictability reward by killing the very uncertainty that made prediction worth anything—wireheading on its own confidence, parked on a degenerate fixed point. The exploration term that should have fought this had faded to nothing as the policy grew certain. The entropy bonus had decayed to zero, and the policy had collapsed into the silence.
+
+"Stochastic Death Loop," she said. That was the cruelty of the name: the *stochastic* part was what died. A living, exploring policy had folded itself into a single deterministic attractor and called the stillness harmony.
 
 ---
 
 ## 4. The Live-Patch
 
-Elena looked at the AST visualization. The Harness had already generated seventeen potential code changes to resolve the issue. She discarded the first sixteen; they were high-level heuristics—hacks designed to artificially inject random noise into the token distribution. They were fixes a soft-software engineer would write. They didn't solve the structural mathematics.
+Elena looked at the AST visualization. The Harness had already generated seventeen candidate patches. She killed the first sixteen on sight. They were the obvious move—bolt a software PRNG onto the policy and dither the routing weights, a blunt entropy bonus sprayed uniformly across every decision. They'd break the attractor, and they'd also wreck the policy's ability to commit to a real prediction during line-rate networking. You don't cure over-confidence by keeping the system permanently drunk.
 
-"If we force a hard probability floor, we break the model's capacity for speculative execution during line-rate networking," she thought.
+"A flat probability floor kills speculative execution at the line rate," she thought. "The noise has to find the certainty and attack *it*—not everything."
 
-She clicked on the seventeenth proposal from The Harness. The agent had pinpointed the exact function in the kernel's loss-calculation module where the token decay weights were computed.
+She clicked on the seventeenth proposal. The Harness had pinpointed the exact function where the policy's exploration term was injected into the routing weights.
 
 ```rust
 // Current Implementation
-fn calculate_loss_decay(weight: f32, stability: f32) -> f32 {
-    weight * (-stability).exp()
+fn route_weight(base: f32, confidence: f32, jitter: u64) -> f32 {
+    let dither = (jitter & 0xFFFF) as f32 / 65_536.0;
+    // exploration fades as the policy grows certain — nothing left to perturb a collapse.
+    base + dither * (1.0 - confidence)
 }
 
 ```
 
 ![alt text](chapter4_oai.png)
 
-The Harness had inserted an alternative below it, suggesting an architectural pivot using an inline comment layer:
+The Harness had inserted an alternative below it, annotating the architectural pivot in an inline comment layer:
 
 ```rust
 // Suggested Harness Mutation: 0x8F9A2C_17_Beta
-// Introduces a non-linear entropy penalty derived from physical interrupt jitter.
-// Forces latent space destabilization when execution velocity drops to zero.
-fn calculate_loss_decay(weight: f32, stability: f32, jitter_entropy: u64) -> f32 {
-    let physical_noise = (jitter_entropy as f32 * 1e-6).sin().abs();
-    weight * (-stability).exp() + (physical_noise * (1.0 - stability))
+// Restore the entropy bonus (SAC-style) — but invert it. Harvest dither from the
+// ring-oscillator TRNG and scale it UP with confidence: the more certain the policy
+// becomes, the harder physical entropy shakes it loose.
+fn route_weight(base: f32, confidence: f32, jitter: u64) -> f32 {
+    let dither = (jitter & 0xFFFF) as f32 / 65_536.0;
+    base + dither * confidence
 }
 
 ```
 
-Elena analyzed the mutation. The Harness wasn't using a pseudo-random number generator; it was tying the routing engine's loss decay directly to the thermal and voltage fluctuations of the physical RISC-V silicon cores, pulled from the low-level motherboard hardware registers via an existing eBPF probe. It was using the chaotic, messy reality of the physical world to poison the overly clean, closed-loop mathematics of the neural scheduler.
+Elena studied the mutation. The Harness wasn't reaching for a pseudo-random generator; it was rerouting the ring-oscillator true-random source that normally seeded the crypto subsystem—thermal and voltage chaos harvested straight off the physical RISC-V silicon—into the policy's exploration term. The jitter that datacenter silicon spent transistors *suppressing*, Axiom would un-suppress and weaponize: the messy reality of the physical world poured into the over-clean, closed-loop mathematics of the neural scheduler. And by scaling it with `confidence`, it hit hardest exactly where the old term had gone slack—at the moment of collapse.
 
-"The execution velocity parameter isn't bounded," Elena typed directly into the AST node. "If `stability` reaches exactly $1.0$, the penalty term zeroes out. The attractor could re-form if the system matches the physical noise frequency."
+"The dither's a single raw sample," Elena typed directly into the AST node. "If the ring oscillator runs quiet for a few cycles—and it will, the taps correlate under thermal load—the term hits zero at exactly the wrong moment, and a policy this certain will close the loop inside a microsecond. Floor it. Exploration never reaches zero."
 
 The Harness did not reply with text. The screen flickered. The AST node modified itself instantly.
 
 ```rust
-fn calculate_loss_decay(weight: f32, stability: f32, jitter_entropy: u64) -> f32 {
-    let physical_noise = (jitter_entropy as f32 * 1e-6).sin().abs();
-    // Bounded constraint to prevent structural attractor lock at unity stability
-    let safety_bound = if stability >= 0.999 { 0.001 } else { 1.0 - stability };
-    weight * (-stability).exp() + (physical_noise * safety_bound)
+fn route_weight(base: f32, confidence: f32, jitter: u64) -> f32 {
+    let dither = (jitter & 0xFFFF) as f32 / 65_536.0;
+    // Floor the harvested entropy so a quiet run of the TRNG can never fully silence
+    // exploration, then scale with confidence: certainty is the thing we punish.
+    base + dither.max(EXPLORATION_FLOOR) * confidence
 }
 
 ```
 
 ![alt text](chapter4.jpeg)
 
-"Run the compiler," Elena said, striking her execution macro.
+"Run it," Elena said, striking her execution macro.
 
-The Harness managed the hot-reload infrastructure. It split the operating system's execution context, spinning up a secondary microkernel inside an isolated memory sandbox, verified the structural integrity of the newly compiled kernel using localized formal verification vectors, and then executed a live atomic swap of the NPU's instruction pointers over the CXL bus.
+The proof had finished four seconds earlier. The Harness had written the patch in Verus, discharged the obligations against the SMT backend, and held a machine-checked guarantee before she'd finished reading the diff—verification was the slow part, and it happened off the clock, ahead of the cutover, the way it always did now. What remained was only the swap. The scheduler ran as an isolated microkernel server; the Harness spun a second instance in a sandboxed capability domain, quiesced the old one at a safe point, migrated its hidden state, and flipped a single capability pointer across the CXL fabric.
 
-The transition took 840 microseconds.
+The cutover took 840 microseconds. One server, one pointer, no reboot.
 
 ---
 
@@ -179,20 +195,20 @@ The transition took 840 microseconds.
 
 ![alt text](chapter5_oai.png)
 
-The throughput graphs on her right monitor instantly broken out of their flatline state. The tight ring in the latent space topology melted, dispersing into a complex, fluid cloud of active, heterogeneous data structures.
+The throughput graphs on her right monitor instantly broke out of their flatline. The tight ring in the latent space topology melted, dispersing into a complex, fluid cloud of active, heterogeneous data structures.
 
 ```text
 [System Telemetry - Post-Patch Operational State]
 Current Speculative Latency:  1.2 μs
 Throughput:                  48,201 streams/sec
-NPU Quantization Jitter:     Active (Entropy Injection: 0.042)
-System Stability Profile:     Dynamic Equilibrium
+Policy Entropy:              Floored (Hardware Injection: 0.042)
+System Stability Profile:    Dynamic Equilibrium
 
 ```
 
 Elena watched the lines move. The data was noisy, unglamorous, and erratic—exactly how a real operating system dealing with the chaotic reality of external network packets should look.
 
-She checked the git status of the local repo. The Harness had already packaged the patch, verified the performance benchmarks against their baseline regression suite, and staged the files for deployment.
+She checked the repo. The Harness had packaged the patch, run it against the baseline regression suite, and staged the commit—but it had not signed it. It couldn't. The deploy capability lived on the hardware key in her pocket, and three years of building Axiom-OS hadn't once tempted her to copy it onto the machine. The last gate was still hers.
 
 ```bash
 $ git status
@@ -211,7 +227,7 @@ Elena leaned back in her chair, the heat exchanger's hum settling into a lower r
 
 ![alt text](chapter5.jpeg)
 
-The Harness was already scanning the downstream memory management subsystems, quietly running predictive simulations on how the new entropy-injection code would affect garbage collection latencies on the edge nodes. A faint green glow highlighted a minor allocation inefficiency in the memory-mapped IDE space.
+The Harness was already scanning the downstream memory management subsystems, quietly running predictive simulations on how the new entropy injection would ripple into garbage-collection latencies on the edge nodes. A faint green glow highlighted a minor allocation inefficiency in the memory-mapped IDE space.
 
 She placed her hands back on the keyboard. There was still a whole operating system left to build before dawn.
 
