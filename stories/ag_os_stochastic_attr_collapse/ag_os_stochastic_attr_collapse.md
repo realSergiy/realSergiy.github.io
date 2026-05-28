@@ -1,4 +1,6 @@
-# Agentic OS: Stochastic Attractor Collapse
+---
+title: "Agentic OS: Stochastic Attractor Collapse"
+---
 
 ![alt text](hero_2_oai.png)
 

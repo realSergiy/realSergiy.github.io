@@ -1,0 +1,23 @@
+title: realSergiy
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+defaults:
+  - scope:
+      path: "stories"
+    values:
+      layout: story
+
+exclude:
+  - drafts
+  - deep-research-raw
+  - gists
+  - gists_37132
+  - settings
+  - articles
+  - README.md
+  - .rumdl.toml
