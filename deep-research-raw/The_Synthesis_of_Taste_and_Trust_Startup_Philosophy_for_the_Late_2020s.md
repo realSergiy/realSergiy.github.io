@@ -54,7 +54,7 @@ Venture-scale success is not determined by the speed at which code is generated,
 
 Founder-market fit matters more, not less, when execution is automated; the developer who possesses deep domain insight can direct the Software 3.0 substrate to solve highly specific, previously unaddressed structural problems.
 
-```
+```text
 
   Customer Problem -> Manual Spec -> Months of Engineering -> Deployment -> Customer Feedback
 
@@ -86,11 +86,11 @@ The seam between legitimate capability-push and the classic "technology in searc
 
 To build a valuable, long-term enterprise, a founder must design for structural power. Hamilton Helmer's classic strategy text, *7 Powers*, identifies seven distinct sources of competitive advantage that enable a business to earn outsized returns. Each of these powers must be re-evaluated for the Software 3.0 era, specifically drawing the distinction between standard software-as-a-service (SaaS) and transaction-focused marketplace models.
 
-```
-                
+```text
+
 
        DURABILITY BOOSTED                      DURABILITY DEPRECIATED
-       
+
    +-------------------------+             +-------------------------+
    |  Counter-Positioning    |             |  Scale Economies        |
    |  (Outcome-based labor)  |             |  (Commoditized SaaS R&D)|
@@ -172,7 +172,7 @@ In the late 2020s, process power belongs to the hyper-lean, high-velocity startu
 
 Simon Wardley’s mapping framework offers a powerful lens for visualizing the commoditization pipeline of the AI stack. Every technological component evolves through four distinct stages along the x-axis: Genesis (novel, custom-built), Custom, Product, and Commodity (utility). The y-axis represents the visibility of the component to the end-user.
 
-```
+```text
 [ High User Visibility ]
        |
        v     User Needs (High-level Workflows)
@@ -279,7 +279,7 @@ Traditional unit testing is insufficient to guarantee reliability in non-determi
 
 The implementation of EDD follows three fundamental rules: first, start early by extracting the first twenty real-world failure traces from production logs and containerizing them as the baseline test suite ; second, grade the final outcome rather than the tool sequence path, as penalizing an agent for finding a creative, non-linear execution path creates brittle tests ; and third, manually read conversation transcripts to ensure agents are not succeeding for the wrong reasons, masking deep logical flaws.
 
-```
+```text
 Traditional: -> [ Manual Code ] -> ->
 
 AI-Native:   [ Prompt Intent ] -> [ Vibes Coding ] -> -> ->

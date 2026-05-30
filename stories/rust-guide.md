@@ -73,7 +73,7 @@ enum Shape {
 ```
 This is your `type Shape = { kind: "circle"; radius: number } | ...` — but the tag is implicit and the compiler *forces* exhaustive handling. C# 14 still has **no native discriminated unions** (the proposal hasn't shipped), so you'd be faking this with a sealed hierarchy + visitor today; Rust gives it natively with pattern matching. `Option<T>` and `Result<T, E>` are just enums from the standard library.
 
-### No `null`. Ever.
+### No `null`. Ever
 There is no null and no nullable reference types because there are no nulls to make non-null. Absence is `Option<T>` = `Some(T) | None`. Your existing "use `undefined`, be explicit about unknowns" rule *is* `Option`. The compiler will not let you "forget" to handle `None`. Fallible operations return `Result<T, E>` (below), not exceptions.
 
 ---
