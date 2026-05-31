@@ -1,5 +1,5 @@
 ---
-title: Rulebook Agent Architecture: Pitfalls & Rulebook
+title: Agent Pitfalls & Rulebook
 ---
 
 **An architectural deep-dive and actionable rulebook for building an extensible, enterprise-grade AI coding agent.**
