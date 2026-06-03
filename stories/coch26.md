@@ -1,3 +1,4 @@
+---
 title: Implantable Hardware Advancements (2023–2029)
 ---
 
