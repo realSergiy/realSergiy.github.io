@@ -1,5 +1,8 @@
 ---
 title: Agent Pitfalls & Rulebook
+author: realSergiy
+date: 2026-05-31
+description: Architectural deep-dive and actionable rulebook for building an extensible, enterprise-grade AI coding agent.
 ---
 
 **An architectural deep-dive and actionable rulebook for building an extensible, enterprise-grade AI coding agent.**

@@ -3,6 +3,8 @@ title: "Agentic OS: Stochastic Attractor Collapse"
 version: 0.5.0
 author: realSergiy
 date: 2026-05-29
+description: A 2031 systems fiction told through commit logs — a deterministic scheduler is rewritten into a stochastic routing fabric, and its attractors collapse mid-flight.
+hero: /stories/stoch_attr_collapse/hero_2_oai.png
 ---
 
 ![alt text](hero_2_oai.png)

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include head.html css="home.css" %}
+</head>
+<body>
+  {% include nav.html %}
+  <header class="hero grid-glow">
+    <h1>{{ site.title }}</h1>
+    <p class="tagline">{{ page.tagline | default: site.description }}</p>
+  </header>
+  <main class="landing">
+    <section id="stories">
+      <div class="section-head">
+        <h2>Stories</h2>
+        <span class="count">{{ site.stories | size }}</span>
+      </div>
+      <div class="card-grid">
+        {% assign stories = site.stories | sort: "date" | reverse %}
+        {% for story in stories %}
+        <a class="card" href="{{ story.url | relative_url }}">
+          {% if story.hero %}
+          <div class="card-cover"><img src="{{ story.hero | relative_url }}" alt="" loading="lazy"></div>
+          {% else %}
+          <div class="card-cover card-art grid-glow"><span>{{ story.emoji | default: "✦" }}</span></div>
+          {% endif %}
+          <div class="card-body">
+            <h3>{{ story.title }}</h3>
+            <p>{{ story.description }}</p>
+            <time datetime="{{ story.date | date_to_xmlschema }}">{{ story.date | date: "%b %-d, %Y" }}</time>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="cheatsheets">
+      <div class="section-head">
+        <h2>Cheatsheets</h2>
+        <span class="count">{{ site.cheet | size }}</span>
+      </div>
+      <div class="card-grid">
+        {% assign sheets = site.cheet | sort: "title" %}
+        {% for sheet in sheets %}
+        <a class="card" href="{{ sheet.url | relative_url }}">
+          <div class="card-body">
+            <h3>{{ sheet.title }}</h3>
+            <p>{{ sheet.description }}</p>
+            <time datetime="{{ sheet.date | date_to_xmlschema }}">{{ sheet.date | date: "%b %-d, %Y" }}</time>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="tech">
+      <div class="section-head">
+        <h2>Tech</h2>
+        <span class="count">{{ site.tech | size }}</span>
+      </div>
+      <div class="card-grid">
+        {% assign notes = site.tech | sort: "date" | reverse %}
+        {% for note in notes %}
+        <a class="card" href="{{ note.url | relative_url }}">
+          <div class="card-body">
+            <h3>{{ note.title }}</h3>
+            <p>{{ note.description }}</p>
+            <time datetime="{{ note.date | date_to_xmlschema }}">{{ note.date | date: "%b %-d, %Y" }}</time>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+  {% include footer.html %}
+</body>
+</html>

@@ -1,5 +1,8 @@
 ---
 title: "Python Cheat Sheet"
+author: realSergiy
+date: 2026-06-05
+description: Quick reference for everyday Python — list slicing and comprehensions.
 ---
 
 ## List Slicing

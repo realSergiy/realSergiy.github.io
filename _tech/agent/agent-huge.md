@@ -1,4 +1,10 @@
-# Building a Claude Code-Style Coding Agent on OpenTUI + Bun: A May 2026 Technical Plan
+---
+title: "Building a Claude Code-Style Coding Agent on OpenTUI + Bun: A May 2026 Technical Plan"
+author: realSergiy
+date: 2026-05-31
+description: The full technical plan — model routing, a two-layer Auto Mode classifier guard, skills over MCP, and SQLite-to-GraphRAG memory.
+render_with_liquid: false
+---
 
 ## TL;DR
 

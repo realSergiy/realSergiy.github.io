@@ -2,6 +2,7 @@
 title: "Rust for the TypeScript 6 / C# 14"
 author: realSergiy
 date: 2026-05-30
+description: Rust 1.96 for developers fluent in strict TypeScript and modern C# — ownership, lifetimes, and idioms. Density over hand-holding.
 ---
 
 > Target: Rust 1.96 (2024 edition), TypeScript 6, .NET 10 / C# 14. Written for someone fluent in strict TS and modern C#, moving to Rust as a primary language. Density over hand-holding.

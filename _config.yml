@@ -1,4 +1,7 @@
 title: realSergiy
+description: Stories, cheatsheets, and tech notes
+author: realSergiy
+url: "https://realsergiy.github.io"
 markdown: kramdown
 highlighter: rouge
 
@@ -6,11 +9,45 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
 
+collections:
+  stories:
+    output: true
+    permalink: /stories/:path:output_ext
+  cheet:
+    output: true
+    permalink: /cheet/:path:output_ext
+  tech:
+    output: true
+    permalink: /tech/:path:output_ext
+
 defaults:
   - scope:
-      path: "stories"
+      type: stories
     values:
       layout: story
+      author: realSergiy
+  - scope:
+      type: cheet
+    values:
+      layout: story
+      author: realSergiy
+  - scope:
+      type: tech
+    values:
+      layout: story
+      author: realSergiy
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-redirect-from
+
+feed:
+  collections:
+    - stories
+    - cheet
+    - tech
 
 exclude:
   - excludes
@@ -20,3 +57,4 @@ exclude:
   - settings
   - README.md
   - .rumdl.toml
+  - justfile

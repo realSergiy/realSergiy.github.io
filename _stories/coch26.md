@@ -1,5 +1,9 @@
 ---
 title: Implantable Hardware Advancements (2023–2029)
+author: realSergiy
+date: 2026-06-03
+description: Research notes on cochlear implant hardware — totally implantable systems, smart upgradeable implants, drug-eluting arrays, and optical stimulation.
+emoji: "🦻"
 ---
 
 ## TL;DR

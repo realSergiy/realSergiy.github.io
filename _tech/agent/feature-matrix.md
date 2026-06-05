@@ -2,6 +2,7 @@
 title: "Coding-Agent Feature Matrix"
 author: realSergiy
 date: 2026-05-31
+description: Seven coding agents scored 0–100 across a 58-feature taxonomy, from source-code evidence only.
 ---
 
 A source-code-derived comparison of seven coding agents found in this directory. Every agent was reviewed against an identical 58-feature taxonomy and scored **0–100** based **only on source-code evidence** (not marketing/README claims). Scores: `0` = absent, `1–25` = stub/partial, `26–50` = basic, `51–75` = solid, `76–90` = comprehensive, `91–100` = best-in-class.

@@ -1,4 +1,9 @@
-# Building a Coding Agent on OpenTUI + Bun: A Comprehensive Plan
+---
+title: "Building a Coding Agent on OpenTUI + Bun: A Comprehensive Plan"
+author: realSergiy
+date: 2026-05-31
+description: A lean blueprint — a pure async agent loop, tools as values, the TUI as a subscriber, and safety as an interceptor.
+---
 
 ## 0. Guiding principles (the "why" before the "what")
 
