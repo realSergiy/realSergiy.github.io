@@ -359,8 +359,10 @@ Operating a startup in the late 2020s requires navigating extreme, ongoing cogni
 * **Reflexive AI Maximalism**: The belief that AGI is arriving immediately, leading to a total abandonment of classical product discipline, customer discovery, and engineering rigor in favor of pure speculative hype[^43].  
 * **Reflexive AI Denial**: The belief that foundation models are merely a temporary, over-hyped trend, leading to a stubborn refusal to integrate automated cognitive steps into traditional software pipelines[^1].
 
-The most successful builders avoid both extremes by applying the **Stockdale Paradox** to the AI timeline 1:  
-![Stockdale Paradox diagram][image3]  
+The most successful builders avoid both extremes by applying the **Stockdale Paradox** to the AI timeline:
+
+$$\text{Stockdale Paradox} = \text{Unwavering Faith in Generational Transformation} + \text{Brutal Honesty About Immediate Limitations}$$
+
 They maintain unwavering faith that the AI shift represents a structural realignment of the economy, while simultaneously confronting the brutal facts of their immediate operational reality—namely, that their current codebase is depreciating rapidly, model APIs are unstable, and customers care about reliable, audit-ready solutions rather than model novelty[^1].  
 The defining operational discipline is **staying problem-curious rather than capability-obsessed**[^2]. When a new model drops, the natural inclination is to rebuild the product around the latest exciting feature[^2]. The disciplined founder resists this temptation, remaining focused on the core workflow bottlenecks of the user[^2]. They treat the model not as the product itself, but as a modular engine that can be swapped out to improve performance and gross margins[^26].
 
@@ -477,4 +479,4 @@ The business defends its position by cultivating a thick, deeply embedded custom
 [^43]: AI's $600B Question \| Sequoia Capital, accessed on May 20, 2026, [https://sequoiacap.com/article/ais-600b-question/](https://sequoiacap.com/article/ais-600b-question/)  
 [^44]: The "Turing Trap": How and why most people are using AI wrong. \- Reddit, accessed on May 20, 2026, [https://www.reddit.com/r/ArtificialInteligence/comments/1ps9ogp/the\_turing\_trap\_how\_and\_why\_most\_people\_are\_using/](https://www.reddit.com/r/ArtificialInteligence/comments/1ps9ogp/the_turing_trap_how_and_why_most_people_are_using/)  
 [^45]: From AI Chaos to Clarity: Building Situational Awareness with Wardley Mapping \- YouTube, accessed on May 20, 2026, [https://www.youtube.com/watch?v=PFt-aHqapnU](https://www.youtube.com/watch?v=PFt-aHqapnU)  
-[^46]: How the development of ChatGPT slowly killed Chegg. I watched it happen live as an employee : r/OpenAI \- Reddit, accessed on May 20, 2026, [https://www.reddit.com/r/OpenAI/comments/1rzcikg/how\_the\_development\_of\_chatgpt\_slowly\_killed/](https://www.reddit.com/r/OpenAI/comments/1rzcikg/how_the_development_of_chatgpt_slowly_killed/)  
+[^46]: How the development of ChatGPT slowly killed Chegg. I watched it happen live as an employee : r/OpenAI \- Reddit, accessed on May 20, 2026, [https://www.reddit.com/r/OpenAI/comments/1rzcikg/how\_the\_development\_of\_chatgpt\_slowly\_killed/](https://www.reddit.com/r/OpenAI/comments/1rzcikg/how_the_development_of_chatgpt_slowly_killed/)

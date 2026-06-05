@@ -360,98 +360,98 @@ The moment a breakthrough capability is identified, anchor it instantly inside a
 
 #### **Works cited**
 
-[^1]: The 2026 AI Index Report | Stanford HAI, <https://hai.stanford.edu/ai-index/2026-ai-index-report>
+1. The 2026 AI Index Report | Stanford HAI, <https://hai.stanford.edu/ai-index/2026-ai-index-report>
 
-[^2]: What's Software 3.0? (Spoiler: You're Already Using It) \- Hugging Face, <https://huggingface.co/blog/fdaudens/karpathy-software-3>
+2. What's Software 3.0? (Spoiler: You're Already Using It) \- Hugging Face, <https://huggingface.co/blog/fdaudens/karpathy-software-3>
 
-[^3]: Software 1.0 vs 2.0 vs 3.0: How AI Is Rewriting the Rules of Programming \- MindStudio, <https://www.mindstudio.ai/blog/software-1-0-2-0-3-0-ai-programming-paradigm>
+3. Software 1.0 vs 2.0 vs 3.0: How AI Is Rewriting the Rules of Programming \- MindStudio, <https://www.mindstudio.ai/blog/software-1-0-2-0-3-0-ai-programming-paradigm>
 
-[^4]: Defining Aggregators – Stratechery by Ben Thompson, <https://stratechery.com/2017/defining-aggregators/>
+4. Defining Aggregators – Stratechery by Ben Thompson, <https://stratechery.com/2017/defining-aggregators/>
 
-[^5]: Software 3.0 is powered by LLMs, prompts, and vibe coding \- what ..., <https://www.zdnet.com/article/software-3-0-is-powered-by-llms-prompts-and-vibe-coding-what-you-need-know/>
+5. Software 3.0 is powered by LLMs, prompts, and vibe coding \- what ..., <https://www.zdnet.com/article/software-3-0-is-powered-by-llms-prompts-and-vibe-coding-what-you-need-know/>
 
-[^6]: follow-builders/examples/sample-digest.md at main \- GitHub, <https://github.com/zarazhangrui/follow-builders/blob/main/examples/sample-digest.md>
+6. follow-builders/examples/sample-digest.md at main \- GitHub, <https://github.com/zarazhangrui/follow-builders/blob/main/examples/sample-digest.md>
 
-[^7]: Bitter lesson \- Wikipedia, <https://en.wikipedia.org/wiki/Bitter>\_lesson
+7. Bitter lesson \- Wikipedia, <https://en.wikipedia.org/wiki/Bitter>\_lesson
 
-[^8]: Rich Sutton's bitter lesson of AI \- Applied Mathematics Consulting, <https://www.johndcook.com/blog/2025/02/20/bitter-lesson/>
+8. Rich Sutton's bitter lesson of AI \- Applied Mathematics Consulting, <https://www.johndcook.com/blog/2025/02/20/bitter-lesson/>
 
-[^9]: The bitter truth of AI progress : r/deeplearning \- Reddit, <https://www.reddit.com/r/deeplearning/comments/1i8qaud/the>\_bitter\_truth\_of\_ai\_progress/
+9. The bitter truth of AI progress : r/deeplearning \- Reddit, <https://www.reddit.com/r/deeplearning/comments/1i8qaud/the>\_bitter\_truth\_of\_ai\_progress/
 
-[^10]: The Bitter Lesson \- Rich Sutton, <http://www.incompleteideas.net/IncIdeas/BitterLesson.html>
+10. The Bitter Lesson \- Rich Sutton, <http://www.incompleteideas.net/IncIdeas/BitterLesson.html>
 
-[^11]: Learning the Bitter Lesson: Empirical Evidence from 20 Years of CVPR Proceedings \- arXiv, <https://arxiv.org/html/2410.09649v1>
+11. Learning the Bitter Lesson: Empirical Evidence from 20 Years of CVPR Proceedings \- arXiv, <https://arxiv.org/html/2410.09649v1>
 
-[^12]: Anthropic Economic Index report: Learning curves, <https://www.anthropic.com/research/economic-index-march-2026-report>
+12. Anthropic Economic Index report: Learning curves, <https://www.anthropic.com/research/economic-index-march-2026-report>
 
-[^13]: Inside the AI Index: 12 Takeaways from the 2026 Report | Stanford HAI, <https://hai.stanford.edu/news/inside-the-ai-index-12-takeaways-from-the-2026-report>
+13. Inside the AI Index: 12 Takeaways from the 2026 Report | Stanford HAI, <https://hai.stanford.edu/news/inside-the-ai-index-12-takeaways-from-the-2026-report>
 
-[^14]: Economy | The 2026 AI Index Report | Stanford HAI, <https://hai.stanford.edu/ai-index/2026-ai-index-report/economy>
+14. Economy | The 2026 AI Index Report | Stanford HAI, <https://hai.stanford.edu/ai-index/2026-ai-index-report/economy>
 
-[^15]: Economy \- Stanford HAI, <https://hai.stanford.edu/assets/files/ai>\_index\_report\_2026\_chapter\_4\_economy.pdf
+15. Economy \- Stanford HAI, <https://hai.stanford.edu/assets/files/ai>\_index\_report\_2026\_chapter\_4\_economy.pdf
 
-[^16]: The effect of AI on labour demand: a critical assessment of 'Power and Progress' by Acemoglu and Johnson \- ResearchGate, <https://www.researchgate.net/publication/402070802>\_The\_effect\_of\_AI\_on\_labour\_demand\_a\_critical\_assessment\_of\_'Power\_and\_Progress'\_by\_Acemoglu\_and\_Johnson
+16. The effect of AI on labour demand: a critical assessment of 'Power and Progress' by Acemoglu and Johnson \- ResearchGate, <https://www.researchgate.net/publication/402070802>\_The\_effect\_of\_AI\_on\_labour\_demand\_a\_critical\_assessment\_of\_'Power\_and\_Progress'\_by\_Acemoglu\_and\_Johnson
 
-[^17]: Creation, validation, obsolescence: observed evidence of AI-driven labor market displacement, 2020–2025 \- Frontiers, <https://www.frontiersin.org/journals/human-dynamics/articles/10.3389/fhumd.2026.1815037/full>
+17. Creation, validation, obsolescence: observed evidence of AI-driven labor market displacement, 2020–2025 \- Frontiers, <https://www.frontiersin.org/journals/human-dynamics/articles/10.3389/fhumd.2026.1815037/full>
 
-[^18]: Influence of Artificial Intelligence (CD.A) \- Talking About Organizations Podcast, <https://www.talkingaboutorganizations.com/resources/aisle-c-management-topics/rack-cd-digital-transformation-and-future-of-work/influence-of-artificial-intelligence-cd-a/>
+18. Influence of Artificial Intelligence (CD.A) \- Talking About Organizations Podcast, <https://www.talkingaboutorganizations.com/resources/aisle-c-management-topics/rack-cd-digital-transformation-and-future-of-work/influence-of-artificial-intelligence-cd-a/>
 
-[^19]: Perspectives — Substantial, <https://www.substantial.com/perspectives?filter=in-practice>
+19. Perspectives — Substantial, <https://www.substantial.com/perspectives?filter=in-practice>
 
-[^20]: AI's $600B Question | Sequoia Capital, <https://sequoiacap.com/article/ais-600b-question/>
+20. AI's $600B Question | Sequoia Capital, <https://sequoiacap.com/article/ais-600b-question/>
 
-[^21]: Generative AI's Act Two | Sequoia Capital, <https://sequoiacap.com/article/generative-ai-act-two/>
+21. Generative AI's Act Two | Sequoia Capital, <https://sequoiacap.com/article/generative-ai-act-two/>
 
-[^22]: The AI Hype: $600B question or $4.6T+ opportunity? \- Foundation Capital, <https://foundationcapital.com/ideas/the-ai-hype-600b-question-or-4-6t-opportunity>
+22. The AI Hype: $600B question or $4.6T+ opportunity? \- Foundation Capital, <https://foundationcapital.com/ideas/the-ai-hype-600b-question-or-4-6t-opportunity>
 
-[^23]: Innovate, Leverage, Commoditize (ILC) \- Wardley Leadership Strategies, <https://www.wardleyleadershipstrategies.com/strategies/ecosystem/innovate-leverage-commoditize>
+23. Innovate, Leverage, Commoditize (ILC) \- Wardley Leadership Strategies, <https://www.wardleyleadershipstrategies.com/strategies/ecosystem/innovate-leverage-commoditize>
 
-[^24]: The One-Person Billion-Dollar Company: A Solopreneur's Playbook ..., <https://stormy.ai/blog/one-person-billion-dollar-company-playbook>
+24. The One-Person Billion-Dollar Company: A Solopreneur's Playbook ..., <https://stormy.ai/blog/one-person-billion-dollar-company-playbook>
 
-[^25]: 7 Powers Framework: how to establish your competitive moat \- Hustle Badger, <https://www.hustlebadger.com/what-do-product-teams-do/7-powers-establishing-your-competitive-moat/>
+25. 7 Powers Framework: how to establish your competitive moat \- Hustle Badger, <https://www.hustlebadger.com/what-do-product-teams-do/7-powers-establishing-your-competitive-moat/>
 
-[^26]: The seven powers in the age of AI. \- European Internet Ventures, <https://www.europeaninternetventures.com/articles/seven-powers-ai>
+26. The seven powers in the age of AI. \- European Internet Ventures, <https://www.europeaninternetventures.com/articles/seven-powers-ai>
 
-[^27]: Eval Driven Development For Reliable AI Agents \#systemdesign \#aiagents \#anthropic, <https://www.youtube.com/watch?v=GuMVcpUWgBE>
+27. Eval Driven Development For Reliable AI Agents \#systemdesign \#aiagents \#anthropic, <https://www.youtube.com/watch?v=GuMVcpUWgBE>
 
-[^28]: SDLC AI Radar 2026 \- LTM, <https://www.ltm.com/insights/reports/sdlc-ai-radar-2026>
+28. SDLC AI Radar 2026 \- LTM, <https://www.ltm.com/insights/reports/sdlc-ai-radar-2026>
 
-[^29]: The Death of SaaS: How Pay-Per-Result AI Agents Will Replace ..., <https://medium.com/@yangxu>\_16238/the-death-of-saas-how-pay-per-result-ai-agents-will-replace-500b-in-software-0c9af32f7a0d
+29. The Death of SaaS: How Pay-Per-Result AI Agents Will Replace ..., <https://medium.com/@yangxu>\_16238/the-death-of-saas-how-pay-per-result-ai-agents-will-replace-500b-in-software-0c9af32f7a0d
 
-[^30]: Strategy-Bot: Chat GPT \- Richard Ian Porter, <https://richardiporter.com/strategy-bot-chat-gpt/>
+30. Strategy-Bot: Chat GPT \- Richard Ian Porter, <https://richardiporter.com/strategy-bot-chat-gpt/>
 
-[^31]: How to Think Like a VC Part VI: Business and Investment Strategy | by Nicholas Moryl, <https://nmoryl.com/how-to-think-like-a-vc-part-vi-business-and-investment-strategy-1a0563a8fa6c>
+31. How to Think Like a VC Part VI: Business and Investment Strategy | by Nicholas Moryl, <https://nmoryl.com/how-to-think-like-a-vc-part-vi-business-and-investment-strategy-1a0563a8fa6c>
 
-[^32]: 7 Powers: Hamilton Helmer's Strategy Framework \- Aydoo Services, <https://aydoo.services/en/articles/7-powers-hamilton-helmer/>
+32. 7 Powers: Hamilton Helmer's Strategy Framework \- Aydoo Services, <https://aydoo.services/en/articles/7-powers-hamilton-helmer/>
 
-[^33]: 10 Best Sierra AI Alternatives for 2026 \- Parloa, <https://www.parloa.com/knowledge-hub/sierra-ai-alternatives/>
+33. 10 Best Sierra AI Alternatives for 2026 \- Parloa, <https://www.parloa.com/knowledge-hub/sierra-ai-alternatives/>
 
-[^34]: Best AI Support Agent Providers: 7 Platforms Compared \[2026 Comparison\] | Fini Labs, <https://www.usefini.com/guides/best-ai-support-agent-providers-platforms-compared>
+34. Best AI Support Agent Providers: 7 Platforms Compared \[2026 Comparison\] | Fini Labs, <https://www.usefini.com/guides/best-ai-support-agent-providers-platforms-compared>
 
-[^35]: Claude Code \+ Analytics \= Vibe PMing \- Product Growth \- Aakash Gupta, <https://www.news.aakashg.com/p/frank-lee-podcast>
+35. Claude Code \+ Analytics \= Vibe PMing \- Product Growth \- Aakash Gupta, <https://www.news.aakashg.com/p/frank-lee-podcast>
 
-[^36]: The Rise of the One-Person Billion-Dollar Company: Sam Altman's Take \- Startup Bell, <https://www.startupbell.net/post/the-rise-of-the-one-person-billion-dollar-company-sam-altman-s-take>
+36. The Rise of the One-Person Billion-Dollar Company: Sam Altman's Take \- Startup Bell, <https://www.startupbell.net/post/the-rise-of-the-one-person-billion-dollar-company-sam-altman-s-take>
 
-[^37]: Refining strategy with Wardley Mapping. | Irrational Exuberance \- Lethain.com, <https://lethain.com/wardley-mapping/>
+37. Refining strategy with Wardley Mapping. | Irrational Exuberance \- Lethain.com, <https://lethain.com/wardley-mapping/>
 
-[^38]: Mapping 101: A Beginner's Guide \- Strategic Guide | Wardley Maps, <https://www.wardleymaps.com/guides/wardley-mapping-101>
+38. Mapping 101: A Beginner's Guide \- Strategic Guide | Wardley Maps, <https://www.wardleymaps.com/guides/wardley-mapping-101>
 
-[^39]: Accelerators | Wardley Leadership Strategies, <https://www.wardleyleadershipstrategies.com/strategies/accelerators>
+39. Accelerators | Wardley Leadership Strategies, <https://www.wardleyleadershipstrategies.com/strategies/accelerators>
 
-[^40]: Aggregation Theory – Stratechery by Ben Thompson, <https://stratechery.com/2015/aggregation-theory/>
+40. Aggregation Theory – Stratechery by Ben Thompson, <https://stratechery.com/2015/aggregation-theory/>
 
-[^41]: Stratechery: Aggregation Theory \- tl;dr sec, <https://tldrsec.com/p/blog-stratechery-aggregation-theory>
+41. Stratechery: Aggregation Theory \- tl;dr sec, <https://tldrsec.com/p/blog-stratechery-aggregation-theory>
 
-[^42]: Sierra raises $950M Series E at $15.8B valuation | Let's Data Science, <https://letsdatascience.com/news/sierra-raises-950m-series-e-at-158b-valuation-823fdd5c>
+42. Sierra raises $950M Series E at $15.8B valuation | Let's Data Science, <https://letsdatascience.com/news/sierra-raises-950m-series-e-at-158b-valuation-823fdd5c>
 
-[^43]: How AI Creates $1B One-Person Company | Solo Founders \- Orbilon Technologies, <https://orbilontech.com/ai-automation-1b-one-person-company/>
+43. How AI Creates $1B One-Person Company | Solo Founders \- Orbilon Technologies, <https://orbilontech.com/ai-automation-1b-one-person-company/>
 
-[^44]: Sierra AI Pricing 2026: Plans, Costs & Is It Worth It? \- CallBotics, <https://callbotics.ai/blog/sierra-ai-pricing>
+44. Sierra AI Pricing 2026: Plans, Costs & Is It Worth It? \- CallBotics, <https://callbotics.ai/blog/sierra-ai-pricing>
 
-[^45]: The One-person Billion-dollar Company \- Every, <https://every.to/napkin-math/the-one-person-billion-dollar-company>
+45. The One-person Billion-dollar Company \- Every, <https://every.to/napkin-math/the-one-person-billion-dollar-company>
 
-[^46]: Why ROI for GenAI is Hard: Part 1 \- ThetaRho, <https://www.thetarho.ai/blog/why-roi-for-genai-is-hard-part-1>
+46. Why ROI for GenAI is Hard: Part 1 \- ThetaRho, <https://www.thetarho.ai/blog/why-roi-for-genai-is-hard-part-1>
 
-[^47]: AI \- Christoph Bussler, <https://real-programmer.com/pages/ai.html>
+47. AI \- Christoph Bussler, <https://real-programmer.com/pages/ai.html>
 
-[^48]: How the development of ChatGPT slowly killed Chegg. I watched it happen live as an employee : r/OpenAI \- Reddit, <https://www.reddit.com/r/OpenAI/comments/1rzcikg/how>\_the\_development\_of\_chatgpt\_slowly\_killed/
+48. How the development of ChatGPT slowly killed Chegg. I watched it happen live as an employee : r/OpenAI \- Reddit, <https://www.reddit.com/r/OpenAI/comments/1rzcikg/how>\_the\_development\_of\_chatgpt\_slowly\_killed/

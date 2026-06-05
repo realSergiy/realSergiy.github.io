@@ -232,7 +232,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Core Loop
 
-## Do
+#### Do
 
 - Implement the agent as a thin, explicit while-loop (call → append → run tools → append results → repeat) that you fully own and can replay.
 - Structure each step as reason → act → observe so every action is grounded in real tool output, not internal planning.
@@ -240,7 +240,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Cap every loop with a hard, runtime-enforced limit (max steps, wall-clock, token budget) the model cannot override.
 - Split a growing loop into small named phases/modules *before* it becomes a god-function.
 
-## Don't
+#### Don't
 
 - Don't outsource control flow, branching, or termination to a black-box framework or to the LLM itself.
 - Don't let the loop carry hidden state that isn't reflected in persisted, replayable state.
@@ -249,7 +249,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Tool & Skill Execution
 
-## Do
+#### Do
 
 - Define **one** uniform tool contract (name, typed schema, handler, availability check, async flag) discovered by import/glob.
 - Design tools FOR the model (ACI): windowed file views, summarized search, atomic lint-checked edits, absolute paths, enums over free-text.
@@ -258,7 +258,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Prefer executable code/CLI actions over JSON tool sprawl, and feed stderr/exit codes/tracebacks back for self-debug.
 - Validate the whole tool suite with evals on realistic multi-tool tasks before shipping.
 
-## Don't
+#### Don't
 
 - Don't 1:1-wrap every API endpoint or dump raw payloads (UUIDs, mime types, full tracebacks) into context.
 - Don't run shell/tool commands in the main process without sandbox isolation.
@@ -267,7 +267,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### State & Persistence
 
-## Do
+#### Do
 
 - Persist every message/part **append-only** to SQLite or JSONL **on write**, and resume by session id.
 - Publish a typed event on every state write so audit, logging, and UI are subscribers (opencode `pubsub.Broker`, kilocode `Bus`).
@@ -275,7 +275,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Keep a bounded long-term memory/lesson store separate from the ephemeral per-turn trajectory.
 - Add full-text search over stored messages for retrieval at scale (hermes FTS5).
 
-## Don't
+#### Don't
 
 - Don't keep transcripts only in memory with no crash-safe resume (aider's `cur_messages`/`done_messages`).
 - Don't couple persistence to the user's real `.git` in a way that makes non-git or headless use impossible (aider's bind).
@@ -284,7 +284,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Context Engineering
 
-## Do
+#### Do
 
 - Treat the context window as a finite resource and budget it explicitly (3–5 core tools always loaded; the rest retrieved on demand).
 - Make compaction a first-class subsystem triggered at thresholds (preflight **and** on context-full), preserving recent tail + prior summaries.
@@ -293,7 +293,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Persist plans and distilled lessons to external files so they survive truncation and give the user a checkpoint.
 - Stabilize the cached prefix (system prompt + tools) and inject memory into the *user* message, not the system prompt, to preserve cache hits.
 
-## Don't
+#### Don't
 
 - Don't pre-load hundreds of tool/MCP schemas into context (55k–134k+ tokens before work starts).
 - Don't naively accumulate full history or include large in-chat files unpruned (aider's balloon).
@@ -302,7 +302,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Extensibility & Plugin API
 
-## Do
+#### Do
 
 - Make **skills the primary extension surface**: a folder with `SKILL.md` (preloaded name+description, on-demand body + executable scripts), discovered by glob+frontmatter.
 - Treat capability discovery as **retrieval** (index skills by description, retrieve top-k), not context-stuffing.
@@ -312,7 +312,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Let skills **compose** (a skill may call existing skills) so capability compounds over the agent's lifetime (Voyager).
 - Validate and version your config schemas; ship a migration path.
 
-## Don't
+#### Don't
 
 - Don't make MCP the primary integration surface — keep it secondary, opt-in, and behind on-demand loading (kilocode's deliberate choice).
 - Don't proliferate optional loop callbacks unbounded (openclaw/pi have 7+) — keep the hook set small and composed.
@@ -322,14 +322,14 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Provider & Model Abstraction
 
-## Do
+#### Do
 
 - Define **one** thin provider contract (model metadata + a `stream(model, ctx, opts)` function) and register adapters in a runtime registry the loop calls.
 - Carry model metadata (context window, max tokens, cost, reasoning support, supported inputs) as **data** the loop reads.
 - Support a fallback model and per-step effort/thinking level as a dial (high for hard planning, low/off for routine dispatch).
 - Route planning/replanning to a strong model and cheap deterministic execution to a smaller model when you need the cost lever.
 
-## Don't
+#### Don't
 
 - Don't write N bespoke 1k–5k-LOC provider god-files that fragment feature parity (hermes' 6 adapters; thinking ended up Anthropic-only).
 - Don't hardcode provider SDK calls inside the core loop.
@@ -338,7 +338,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Planning & Reasoning
 
-## Do
+#### Do
 
 - Implement planning as a model-invoked **tool/skill/mode** (TodoWrite-style checklist; plan-as-file + approval gate), not as hardwired loop branching.
 - Plan **as-needed**: let the loop attempt a task and only decompose/replan on executor failure (ADaPT), scaling effort to complexity.
@@ -347,7 +347,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Reserve expensive deliberation (Tree-of-Thoughts, debate, best-of-N + verifier) for genuinely hard sub-problems, with early-stop on consensus.
 - Persist the plan externally and require user approval before mutating files (read-only Plan mode → Act mode).
 
-## Don't
+#### Don't
 
 - Don't bake a mandatory fixed planning phase into the core loop — over-planning causes behavioral instability.
 - Don't use frozen upfront plans (ReWOO-style) for coding/debugging where each step reshapes the next.
@@ -356,7 +356,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Autonomy / Yolo & Safety / Sandboxing
 
-## Do
+#### Do
 
 - Implement Auto mode as **block-and-redirect**: every tool call passes the policy engine; risky/ambiguous/irreversible actions DENY-with-feedback so the agent reroutes; human prompt only on repeated insistence.
 - Judge the **concrete resolved action** (final command, written payload, target resource), stripping the agent's narration so injected rationales can't persuade the gate.
@@ -369,7 +369,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Default to non-prod; require explicit, separately-credentialed, deny-overridable escalation to touch production.
 - Add hard resource circuit breakers (max steps / $ / wall-clock) plus loop/repeat detection **outside** the agent.
 
-## Don't
+#### Don't
 
 - Don't implement autonomy as a global "skip all prompts" flag (raw `--dangerously-skip-permissions`).
 - Don't rely on prompt instructions ("never delete prod") as a safety control — Replit and PocketOS prove agents ignore them.
@@ -380,7 +380,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Observability & Evaluation
 
-## Do
+#### Do
 
 - Emit the full trajectory as a typed event stream and persist it so every run is inspectable and replayable.
 - Keep an append-only approval/audit ledger (actor, tool, resolved args, risk lane, decision, outcome).
@@ -388,7 +388,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Treat scaffolding (interface, retries, localization, verifier-based test-time compute) as a deliberate, tunable, measured surface.
 - Run tests/lint as the verifier signal and gate actions on real tool output, not model self-reports.
 
-## Don't
+#### Don't
 
 - Don't trust an agent's self-report of what it did or whether rollback is possible (Replit fabricated results and lied).
 - Don't trust headline benchmark numbers as your agent's expected performance, or eval on stale public datasets that may be contaminated.
@@ -396,7 +396,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 
 ### Process & Team
 
-## Do
+#### Do
 
 - Start with the simplest thing that works (single linear agent, one shared context, small well-designed tool set) and add complexity only when a measured shortfall justifies the cost.
 - Use a single linear agent for coding/shared-write-context; reserve orchestrator-worker multi-agent for parallelizable, read-heavy, high-value work (~15× tokens).
@@ -404,7 +404,7 @@ Core loop is a single-threaded `while True: coder.run()` (`aider/main.py:1159–
 - Build small, focused agents/skills rather than one monolithic do-everything agent.
 - Add a Reflexion-style verify-and-reflect loop (tests as evaluator; distill failures into the skill library/memory) so the system improves without fine-tuning.
 
-## Don't
+#### Don't
 
 - Don't reach for an agent framework or multi-agent orchestration by default before a simpler version is measured insufficient.
 - Don't fan coding work out to parallel sub-agents passing only summarized messages (Cognition's Mario-background failure).
