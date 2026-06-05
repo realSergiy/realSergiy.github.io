@@ -13,12 +13,10 @@ defaults:
       layout: story
 
 exclude:
-  - drafts
-  - docs  
-  - deep-research-raw
+  - excludes
+  - docs
   - gists
   - gists_37132
   - settings
-  - articles
   - README.md
   - .rumdl.toml
