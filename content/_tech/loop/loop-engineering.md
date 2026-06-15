@@ -3,7 +3,7 @@ title: Loop engineering
 author: realSergiy
 date: 2026-06-16
 description: The 14-step roadmap from prompter to loop designer
-hero: /tech/loop/00-cover.jpg
+hero: 00-cover.jpg
 ---
 
 Most developers still prompt their coding agents by hand. They type, they wait, they read the diff, they type again. 9 out of 10 builders have never written a single loop that prompts the agent for them.

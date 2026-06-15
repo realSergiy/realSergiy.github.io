@@ -7,10 +7,12 @@
 This site = a growing set of image-heavy stories/articles on GitHub Pages, dark
 theme, Markdown with code + math. All six are now implemented:
 
-1. **Collections** — `_stories/`, `_cheet/`, `_tech/` are real collections, so
+1. **Collections** — `content/_stories/`, `content/_cheet/`, `content/_tech/`
+   are real collections (gathered under `content/` via `collections_dir`), so
    `site.stories` / `site.cheet` / `site.tech` are lists and the root
    `index.md` (layout `home`) auto-generates the landing page from front
-   matter (title, date, description, hero). Permalinks
+   matter (title, date, description, hero — `hero` is a path relative to the
+   article folder, e.g. `00-cover.jpg`). Permalinks
    (`/stories/:path:output_ext` etc.) keep the original URLs, which also keeps
    relative image links inside story folders working.
 
@@ -51,7 +53,8 @@ kramdown:
   input: GFM                 # parse GitHub-Flavored Markdown (fenced code, tables, etc.)
   syntax_highlighter: rouge  # hand code blocks to Rouge -> the .highlight CSS classes
 
-collections:                 # content lives in _stories/, _cheet/, _tech/
+collections_dir: content     # collections (and _posts) are read from content/, not the repo root
+collections:                 # content lives in content/_stories/, content/_cheet/, content/_tech/
   stories:
     output: true             # render each document to a page
     permalink: /stories/:path:output_ext  # keep pre-collection URLs (and relative image links)
@@ -96,7 +99,7 @@ exclude:                     # folders/files NOT copied into the built site (_si
 Documents in a collection need front matter to be rendered; a file without it
 is copied to `_site/` as a raw static file. Static assets (images) inside
 collection folders are output following the collection permalink, so
-`_stories/x/hero.png` still lands at `/stories/x/hero.png`.
+`content/_stories/x/hero.png` still lands at `/stories/x/hero.png`.
 
 Key point about `exclude`: those paths are kept out of the **published** site
 but stay in the repo (which is public). So they're "not on the website," not

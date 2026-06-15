@@ -1,0 +1,14 @@
+{%- assign filename = include.item.url | split: "/" | last -%}
+{%- assign base = include.item.url | remove: filename -%}
+<a class="card" href="{{ include.item.url | relative_url }}">
+  {% if include.item.hero %}
+  <div class="card-cover"><img src="{{ include.item.hero | prepend: base | relative_url }}" alt="" loading="lazy"></div>
+  {% else %}
+  <div class="card-cover card-art grid-glow"><span>{{ include.item.emoji | default: "✦" }}</span></div>
+  {% endif %}
+  <div class="card-body">
+    <h3>{{ include.item.title }}</h3>
+    <p>{{ include.item.description }}</p>
+    <time datetime="{{ include.item.date | date_to_xmlschema }}">{{ include.item.date | date: "%b %-d, %Y" }}</time>
+  </div>
+</a>

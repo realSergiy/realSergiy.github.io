@@ -18,18 +18,7 @@
       <div class="card-grid">
         {% assign stories = site.stories | sort: "date" | reverse %}
         {% for story in stories %}
-        <a class="card" href="{{ story.url | relative_url }}">
-          {% if story.hero %}
-          <div class="card-cover"><img src="{{ story.hero | relative_url }}" alt="" loading="lazy"></div>
-          {% else %}
-          <div class="card-cover card-art grid-glow"><span>{{ story.emoji | default: "✦" }}</span></div>
-          {% endif %}
-          <div class="card-body">
-            <h3>{{ story.title }}</h3>
-            <p>{{ story.description }}</p>
-            <time datetime="{{ story.date | date_to_xmlschema }}">{{ story.date | date: "%b %-d, %Y" }}</time>
-          </div>
-        </a>
+        {% include card.html item=story %}
         {% endfor %}
       </div>
     </section>
@@ -61,18 +50,7 @@
       <div class="card-grid">
         {% assign notes = site.tech | sort: "date" | reverse %}
         {% for note in notes %}
-        <a class="card" href="{{ note.url | relative_url }}">
-          {% if note.hero %}
-          <div class="card-cover"><img src="{{ note.hero | relative_url }}" alt="" loading="lazy"></div>
-          {% else %}
-          <div class="card-cover card-art grid-glow"><span>{{ note.emoji | default: "✦" }}</span></div>
-          {% endif %}
-          <div class="card-body">
-            <h3>{{ note.title }}</h3>
-            <p>{{ note.description }}</p>
-            <time datetime="{{ note.date | date_to_xmlschema }}">{{ note.date | date: "%b %-d, %Y" }}</time>
-          </div>
-        </a>
+        {% include card.html item=note %}
         {% endfor %}
       </div>
     </section>
