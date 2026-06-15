@@ -62,6 +62,11 @@
         {% assign notes = site.tech | sort: "date" | reverse %}
         {% for note in notes %}
         <a class="card" href="{{ note.url | relative_url }}">
+          {% if note.hero %}
+          <div class="card-cover"><img src="{{ note.hero | relative_url }}" alt="" loading="lazy"></div>
+          {% else %}
+          <div class="card-cover card-art grid-glow"><span>{{ note.emoji | default: "✦" }}</span></div>
+          {% endif %}
           <div class="card-body">
             <h3>{{ note.title }}</h3>
             <p>{{ note.description }}</p>
