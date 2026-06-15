@@ -3,10 +3,9 @@ title: The Calculus of Unspoken
 author: realSergiy
 date: 2026-06-05
 description: In a city where unsaid words have measurable mass, a Density Technician balances the nightly ledger that lets citizens sleep.
-hero: calc.jpg
 ---
 
-![alt text](calc.jpg)
+![alt text](hero.jpg)
 
 ## **The 1: The Nightly Balance**
 

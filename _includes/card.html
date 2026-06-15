@@ -1,8 +1,33 @@
-{%- assign filename = include.item.url | split: "/" | last -%}
-{%- assign base = include.item.url | remove: filename -%}
+{%- assign url_filename = include.item.url | split: "/" | last -%}
+{%- assign url_dir = include.item.url | remove: url_filename -%}
+{%- assign src_filename = include.item.path | split: "/" | last -%}
+{%- assign src_dir = include.item.path | remove: src_filename -%}
+
+{%- assign hero_file = include.item.hero -%}
+{%- unless hero_file -%}
+  {%- assign hero_png = "" -%}
+  {%- assign hero_jpg = "" -%}
+  {%- assign hero_jpeg = "" -%}
+  {%- for f in site.static_files -%}
+    {%- if f.basename == "hero" -%}
+      {%- assign f_dir = f.path | remove: f.name -%}
+      {%- if f_dir == src_dir -%}
+        {%- case f.extname -%}
+          {%- when ".png" -%}{%- assign hero_png = f.name -%}
+          {%- when ".jpg" -%}{%- assign hero_jpg = f.name -%}
+          {%- when ".jpeg" -%}{%- assign hero_jpeg = f.name -%}
+        {%- endcase -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if hero_png != "" -%}{%- assign hero_file = hero_png -%}
+  {%- elsif hero_jpg != "" -%}{%- assign hero_file = hero_jpg -%}
+  {%- elsif hero_jpeg != "" -%}{%- assign hero_file = hero_jpeg -%}{%- endif -%}
+{%- endunless -%}
+
 <a class="card" href="{{ include.item.url | relative_url }}">
-  {% if include.item.hero %}
-  <div class="card-cover"><img src="{{ include.item.hero | prepend: base | relative_url }}" alt="" loading="lazy"></div>
+  {% if hero_file %}
+  <div class="card-cover"><img src="{{ hero_file | prepend: url_dir | relative_url }}" alt="" loading="lazy"></div>
   {% else %}
   <div class="card-cover card-art grid-glow"><span>{{ include.item.emoji | default: "✦" }}</span></div>
   {% endif %}

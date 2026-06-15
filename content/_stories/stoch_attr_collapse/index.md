@@ -4,10 +4,9 @@ version: 0.5.0
 author: realSergiy
 date: 2026-05-29
 description: A 2031 systems fiction told through commit logs — a deterministic scheduler is rewritten into a stochastic routing fabric, and its attractors collapse mid-flight.
-hero: hero_2_oai.png
 ---
 
-![alt text](hero_2_oai.png)
+![alt text](hero.png)
 
 ## Commit Log: `0x8F9A2C`
 

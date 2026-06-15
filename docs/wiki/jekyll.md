@@ -11,10 +11,14 @@ theme, Markdown with code + math. All six are now implemented:
    are real collections (gathered under `content/` via `collections_dir`), so
    `site.stories` / `site.cheet` / `site.tech` are lists and the root
    `index.md` (layout `home`) auto-generates the landing page from front
-   matter (title, date, description, hero — `hero` is a path relative to the
-   article folder, e.g. `00-cover.jpg`). Permalinks
-   (`/stories/:path:output_ext` etc.) keep the original URLs, which also keeps
-   relative image links inside story folders working.
+   matter (title, date, description). The card cover is found **by
+   convention**: a `hero.png`, `hero.jpg`, or `hero.jpeg` next to the article
+   (precedence in that order) is used automatically — no front matter needed.
+   An optional `hero:` key overrides it with a path relative to the article
+   folder. With no hero file, the card falls back to an emoji tile (`emoji:`
+   front matter, default `✦`). Permalinks (`/stories/:path:output_ext` etc.)
+   keep the original URLs, which also keeps relative image links inside story
+   folders working.
 
 2. **Plugins** — the payoff of building via GitHub Actions (any gem allowed):
    - `jekyll-seo-tag` — proper `<title>`, Open Graph / Twitter cards (link
