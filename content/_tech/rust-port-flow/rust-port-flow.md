@@ -5,7 +5,9 @@ date: 2026-06-29
 description: How the Facebook Flow team mechanically ported their OCaml type checker to Rust with heavy AI assistance — the decisions, the agent workflow, and a 2x speedup. A summary of the team's own write-up.
 ---
 
-> A summary of the [Facebook Flow](https://github.com/facebook/flow) team's engineering write-up, [*Flow's OCaml to Rust Port*](https://medium.com/flow-type/flows-ocaml-to-rust-port-78b95bcf49e9) by Sam Zhou (June 2026). The original post is the authoritative account; this is my condensed read of it, with commentary. The ported source now lives in the [`rust_port`](https://github.com/facebook/flow/tree/main/rust_port) Cargo workspace.
+![Flow has been ported to Rust](hero.png)
+
+> A summary of the [Facebook Flow](https://github.com/facebook/flow) team's engineering write-up. The ported source now lives in the [`rust_port`](https://github.com/facebook/flow/tree/main/rust_port) Cargo workspace.
 
 Flow's entire OCaml codebase has been ported to Rust by the Facebook Flow team. As of **v0.319** (released June 17, 2026), the `flow-bin` npm package ships the Rust binary. On large internal JavaScript codebases the Rust build was measured at roughly **2x faster** across most type-checking stages, and **30–100% faster** in the heaviest checking stage.
 
