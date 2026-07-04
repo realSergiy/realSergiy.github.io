@@ -1,51 +1,320 @@
-# Architectural Blueprint for Lightweight, SSO-Integrated React Chatbot Plugins (July 2026)
-## The Paradigm Shift in Conversational Interfaces
-The landscape of conversational artificial intelligence has undergone a fundamental transformation by July 2026. The era of monolithic, heavy-duty client libraries—most notably the Microsoft Bot Framework Web Chat—has been largely superseded by a demand for modular, headless, and lightweight architectures. Organizations increasingly require chatbot interfaces that can be seamlessly embedded into arbitrary host websites as standalone plugins without dictating the underlying styling conventions or incurring massive bundle size penalties. The engineering constraints for modern enterprise chatbot plugins dictate that the application must execute securely within an isolated DOM environment, synchronize state across identity providers for Single Sign-On (SSO), and natively render complex, interactive payloads such as Adaptive Cards.
-The architecture required to fulfill these demands rests on three technical pillars. First, the selection of a headless React user interface library that separates state management from visual rendering, ensuring the bundle size remains strictly optimized while maintaining high extensibility. Second, the compilation and distribution of this React application as an embeddable Web Component, utilizing the Shadow DOM to strictly isolate cascading style sheets and prevent layout conflicts with the arbitrary host website. Third, the implementation of a robust, cross-origin authentication bridge that allows the host website's existing SSO session to securely pass identity tokens into the encapsulated widget environment without falling victim to cross-site scripting (XSS) vulnerabilities or third-party cookie restrictions. This report exhaustively analyzes the optimal technologies and integration patterns required to engineer such a solution as of mid-2026.
-## Evaluating Lightweight React UI Frameworks
-The modern React ecosystem offers several highly optimized, open-source libraries dedicated to conversational interfaces. The requirement to avoid heavy, tightly coupled frameworks like the Microsoft Bot Framework eliminates traditional full-stack templates and directs focus toward headless component primitives. Headless libraries provide the underlying state machines, streaming text resolution, and accessibility features while delegating the entire visual presentation layer to the developer.
-Among the leading solutions in 2026, assistant-ui and NLUX emerge as the most prominent contenders for engineering a custom, lightweight chatbot plugin. The assistant-ui library has established itself as a premier choice for organizations seeking maximum composability, boasting extensive monthly downloads and backing from major industry accelerators. It operates on a headless primitive model heavily inspired by Radix UI, providing granular components such as Thread, Message, and Composer. The architecture of assistant-ui is highly advantageous for custom plugin development because it inherently supports Generative UI—the ability to intercept specific tool calls or JSON payloads and render them as native React components. This capability is instrumental when integrating Adaptive Cards, as the library provides a structured pipeline to map incoming metadata directly into custom rendering functions through its MessagePrimitive.Parts API. Furthermore, assistant-ui allows developers to bring their own styling solutions, such as Tailwind CSS, without forcing a predefined aesthetic.
-The architectural philosophy of assistant-ui relies on a robust Context API, leveraging hooks such as useAuiState and useAuiEvent to manage state immutably. This allows developers to read state reactively with automatic re-renders or trigger imperative actions, such as appending a message or reloading a response, seamlessly across isolated scopes. When a developer needs to group adjacent message parts—such as clustering multiple tool calls or merging consecutive text blocks—assistant-ui offers MessagePrimitive.GroupedParts, which maps parts to a nested tree based on custom grouping logic, drastically simplifying the rendering of complex, multi-modal LLM responses.
-Conversely, NLUX (Natural Language User Experience) offers a distinct architectural approach tailored specifically for minimal configuration and rapid deployment. Built with a zero-dependency core, NLUX prioritizes a lightweight footprint while supporting both React and vanilla JavaScript environments. A defining feature of NLUX is its robust support for custom renderers through the messageOptions property. Developers can inject customized display logic for both streamed data and batched responses, utilizing the ResponseRenderer interface to intercept complex objects and output bespoke DOM elements. While assistant-ui focuses heavily on composable React nodes, NLUX provides a slightly higher-level abstraction, automatically managing loading spinners, markdown parsing, and conversation history, which reduces the boilerplate required to initialize the chat interface.
-The handling of data streams in NLUX is particularly refined. When integrating custom UI components, developers must differentiate between StreamResponseComponentProps and BatchResponseComponentProps. For streamed data, NLUX supplies a containerRef object, allowing the custom renderer to point to an HTML element where markdown chunks are appended in real-time. This fine-grained control over the DOM ensures that complex elements, such as data tables or interactive forms, do not suffer from layout thrashing during text generation.
-A third notable framework is AgentsKit, which represents the extreme end of the lightweight spectrum. Engineered with a core footprint of merely ten kilobytes, AgentsKit provides a formal set of contracts and adapters for building agentic frontends. While exceptionally performant and boasting zero lock-in, its ecosystem is heavily geared toward holistic autonomous agent runtime orchestration rather than providing the granular UI primitives required to build a highly customized, interactive widget surface. Other alternatives, such as the Vercel AI SDK and CopilotKit, offer powerful abstractions but tend to either lack built-in UI components entirely (Vercel) or dictate a heavier, application-aware architecture (CopilotKit) that exceeds the requirements of a pure, embeddable chat widget.
-| Framework | Core Architecture | Bundle Profile | Custom Renderer Support | Optimal Use Case |
-|---|---|---|---|---|
-| **assistant-ui** | Headless primitives, unstyled components | Highly optimized, modular | Excellent (MessagePrimitive.Parts) | Complex, highly custom UI requirements requiring tight React integration |
-| **NLUX** | Zero-dependency core, configurable components | Ultra-lightweight | Excellent (ResponseRenderer) | Rapid deployment, strict bundle size limits, framework-agnostic needs |
-| **AgentsKit** | Contract-based adapters, runtime engine | Minimalist (~10KB core) | Moderate | Full agent orchestration rather than specialized UI rendering |
-| **CopilotKit** | App-aware agent orchestration | Heavier, state-coupled | Good | In-app copilots requiring deep access to host application state |
-| **MS Bot Framework** | Monolithic, tightly coupled | Heavy, inflexible | Rigid | Legacy Microsoft ecosystem integrations requiring native Teams support |
-For the specific requirement of building a highly customized, embeddable plugin that intercepts and renders Adaptive Cards via SSO, assistant-ui presents the most robust architectural foundation. Its strict adherence to the headless component pattern ensures that the final compiled widget contains zero extraneous styling code, while its robust state management context securely handles the asynchronous streaming of AI responses.
-## Native Rendering of Adaptive Cards in React
-Adaptive Cards remain a fundamental standard for exchanging declarative user interface content across platforms. Authored entirely in JSON, they allow backend systems to define layout, typography, and interactive elements without writing platform-specific markup. Because the engineering directive explicitly excludes the heavy Microsoft Bot Framework Web Chat, the rendering of these JSON payloads must be handled manually within the chosen lightweight React UI library.
-To achieve this effectively without bloating the plugin, the application must rely on the vanilla adaptivecards JavaScript SDK. While an adaptivecards-react package exists on NPM, historical dependency analyses and developer feedback indicate it carries hard dependencies on external libraries such as swiper, which unnecessarily inflates the bundle size and complicates the build pipeline. Utilizing the vanilla adaptivecards package provides precise control over the parsing and rendering lifecycle while minimizing the overall performance impact.
-The integration architecture requires bridging the gap between React's declarative virtual DOM and the imperative native DOM nodes generated by the Adaptive Cards SDK. When the chatbot backend transmits a payload recognized as an Adaptive Card, the React UI framework must intercept this message and route it to a specialized rendering component. In assistant-ui, this is accomplished by leveraging the MessagePrimitive.Parts component with a child render function. The developer inspects the part.type of the incoming message; if the type corresponds to an Adaptive Card tool call or attachment, the payload is forwarded to a custom React wrapper designated for card rendering.
-Within this custom React wrapper, the vanilla adaptivecards SDK is instantiated. The SDK requires a two-step execution process: parsing the JSON schema and rendering the output. Because the render() method returns a native HTML HTMLElement rather than a React node, the React wrapper must utilize a standard useRef hook attached to an empty container div. Upon the component mounting, a useEffect hook triggers the adaptiveCard.render() method and appends the resulting HTML element directly into the referenced container. This pattern safely isolates the native DOM mutation from React's reconciliation cycle, preventing hydration errors and layout shifts that commonly occur when mixing imperative and declarative rendering paradigms.
-A critical component of this integration is the HostConfig object. The HostConfig is a shared configuration dictionary that defines the overarching visual language of the Adaptive Card, translating the generic JSON layout instructions into pixel-perfect styling that matches the arbitrary host website. By programmatically instantiating a new AdaptiveCards.HostConfig(), developers can override default font families, spacing metrics, color palettes, and interactivity behaviors. Because the plugin must integrate into arbitrary websites, the HostConfig can be dynamically populated using CSS custom properties (variables) inherited from the host document or the widget's internal Shadow DOM, ensuring that the Adaptive Card seamlessly blends into the host's brand identity without requiring rigid, hardcoded styles.
-Furthermore, the onExecuteAction event handler within the Adaptive Card instance must be explicitly wired to the React application's state manager. When a user interacts with a button or form inside the Adaptive Card, the native DOM fires an event that must be captured and translated back into the chatbot's message stream. By assigning a callback function to adaptiveCard.onExecuteAction, the React wrapper can intercept submit actions, extract the form data, and push the payload back to the AI backend via the assistant-ui Context API. This bidirectional communication is vital for workflows where the chatbot requests structured input from the user.
-Security must also be heavily scrutinized during the rendering phase. Because Adaptive Cards support Markdown and rich text, improper handling of the JSON payload can introduce severe Cross-Site Scripting (XSS) vulnerabilities. The adaptivecards library does not natively sanitize HTML; therefore, developers must employ a Markdown parsing library, such as markdown-it, integrated via the AdaptiveCards.onProcessMarkdown lifecycle hook, ensuring that any generated HTML is strictly sanitized before it is appended to the DOM.
-| Adaptive Card SDK Feature | Architectural Implementation in React | Purpose |
-|---|---|---|
-| **Instance Initialization** | new AdaptiveCards.AdaptiveCard() | Creates the core processing engine for the JSON schema. |
-| **HostConfig Application** | adaptiveCard.hostConfig = config | Injects global styling rules to match the host website branding. |
-| **Payload Parsing** | adaptiveCard.parse(jsonPayload) | Validates and constructs the internal element tree. |
-| **DOM Rendering** | containerRef.current.appendChild(rendered) | Bridges the native DOM output into the React virtual DOM safely. |
-| **Action Delegation** | adaptiveCard.onExecuteAction = callback | Captures user interactions and routes them to the React state manager. |
-## Shadow DOM Encapsulation and Web Component Distribution
-To function as a ubiquitous plugin, the chatbot must be capable of being embedded into any arbitrary website via a single HTML <script> tag. The primary engineering risk in this deployment model is the collision of Cascading Style Sheets (CSS). Host websites frequently utilize global CSS selectors that can inadvertently target and mutate the internal layout of the chatbot widget. Conversely, the utility classes utilized by the widget—such as those generated by Tailwind CSS—can leak into the host document and corrupt the existing user interface. To completely mitigate this risk, the widget must be encapsulated within a Shadow DOM boundary.
-The Shadow DOM is a web standard that allows developers to attach a hidden, isolated DOM tree to a standard HTML element. When a component operates within a Shadow DOM, its internal structure and styling rules are strictly separated from the main document, creating an impenetrable encapsulation layer that prevents styles from escaping or intruding. The integration of React with the Shadow DOM has historically presented severe friction points. Prior to recent advancements, React's synthetic event system failed to properly capture custom events traversing the shadow boundary, and passing complex object properties cleanly required brittle useRef workarounds.
-However, the release of React 19 fundamentally resolved these interoperability limitations. React 19 treats Web Components as first-class citizens, natively supporting custom DOM events without requiring manual addEventListener lifecycle hooks, and flawlessly marshaling complex JavaScript objects (such as arrays and configuration dictionaries) directly into Web Component properties instead of forcing them into stringified HTML attributes. To construct the widget, developers define a custom HTML element extending HTMLElement. Within the constructor, this.attachShadow({ mode: 'open' }) is invoked to initialize the isolated root. The 'open' mode is critical, as it permits the host website's administrators to inspect the widget's internal DOM for debugging purposes, whereas a 'closed' mode would aggressively block all external programmatic access, rendering debugging nearly impossible.
-Once the shadow root is established, the React 19 application is mounted directly into this isolated container. It is highly recommended to use the hydrateRoot API rather than createRoot when injecting the component, as createRoot is known to cause a double-render flicker on certain browsers during the initial DOM attachment. By wrapping the initialization logic in an event listener for DOMContentLoaded, the plugin ensures the host environment is fully stable before mounting the React tree.
-Addressing styling within this encapsulated environment introduces unique challenges. Because the Shadow DOM isolates the element, standard global styles are not automatically applied inside it. To make styles available, a <style> element must be programmatically created and appended directly to the Shadow Root alongside the React component. While utilizing standard CSS is straightforward, leveraging modern utility frameworks like Tailwind CSS v4 requires specialized handling. Tailwind 4 generates CSS that relies heavily on CSS Custom Properties (@property) to manage dynamic utility values. Because current browser implementations as of mid-2026 exhibit inconsistent behavior when evaluating @property declarations inside a Shadow DOM, standard variables often fail to resolve properly, leading to broken layouts. Overcoming this limitation requires the implementation of a custom PostCSS transformation phase during the build process. This transformation must parse the Tailwind @property rules and forcefully materialize them as standard declarative variables on the :host selector of the Shadow DOM, ensuring that all utility classes possess concrete fallback values at runtime.
-## Vite and Rollup Compilation Strategies for Single-File Distribution
-Packaging this advanced architecture for distribution requires highly specialized build tooling. Vite, operating in conjunction with Rollup, provides the optimal compilation pipeline for generating embeddable widgets. Standard Vite builds generate an HTML file alongside fragmented JavaScript chunks and external CSS stylesheets to optimize for HTTP/2 multiplexing. For an embeddable plugin, this output is entirely unviable; the artifact must be a singular, self-contained JavaScript file that can be hosted on a Content Delivery Network (CDN) and loaded autonomously by the host website.
-To achieve this, the build pipeline must be explicitly configured to inline all assets. Developers can utilize tools such as vite-plugin-singlefile to force Rollup to compress all logic, dependencies, and styling into one output. Alternatively, developers can configure Rollup directly via the build.lib configuration in vite.config.ts, specifying an Immediately Invoked Function Expression (IIFE) format, which guarantees that the widget executes immediately upon script evaluation without polluting the host's global namespace.
-The handling of CSS during this compilation phase requires specific configuration. Instead of allowing Vite to emit a separate .css file, the application's CSS can be imported directly into the TypeScript entry point using Vite's ?inline query suffix (e.g., import styles from './main.css?inline'). This syntax bypasses the standard CSS extraction phase, converting the compiled stylesheet into a raw string variable. Within the Web Component's initialization logic, this string is applied as the textContent of the dynamically created <style> tag, seamlessly injecting the styles into the Shadow DOM.
-To allow the host website to configure the widget dynamically—such as passing API endpoints or client identifiers—the entry point script must implement logic to read arbitrary data-* attributes from its own <script> tag. By querying document.currentScript upon initialization, the widget can extract values like data-client-key and pass them into the React context as initial state. This methodology prevents the need for complex global configuration objects on the window, maintaining strict isolation.
-| Vite/Rollup Configuration Parameter | Technical Implementation | Purpose |
-|---|---|---|
-| **Output Format** | build.lib.formats: ['iife'] | Compiles code into an Immediately Invoked Function Expression for isolated execution. |
-| **CSS Inlining** | impo[span_101](start_span)[span_101](end_span)[span_103](start_span)[span_103](end_span)rt styles from './style.css?inline' | Forces Vite to expose compiled CSS as a raw string for Shadow DOM injection. |
-| **Asset Threshold** | build.assetsInlineLimit: 100000000 | Instructs Vite to encode all SVG/font assets as Base64 strings directly in the JS bundle. |
-| **Single File Output** | vite-plugin-singlefile |
+# Engineering Architecture Report: Lightweight Embedded Chatbot Integration with Adaptive Cards and Federated Single Sign-On
+## Lightweight Client-Side Chat Frameworks
+When designing a modern, high-performance embedded chat plugin, minimizing the client-side JavaScript footprint is critical to prevent degradation of the host website's page-load metrics. Heavy, enterprise-grade chat interfaces often carry massive dependency trees that inflate bundle sizes, slowing down DOM parsing and expanding the memory profile of the browser session. In the web ecosystem, several highly optimized, lightweight, and actively maintained React-compatible and open-source UI libraries provide the ideal building blocks for constructing customizable chatbot interfaces without the overhead of heavy proprietary SDKs.
+The selection of a lightweight chat UI library depends heavily on the desired balance between architectural flexibility and out-of-the-box UI completeness. The library assistant-ui represents a prominent solution, adhering to a headless UI paradigm similar to Radix. By exposing unstyled, highly accessible primitive components—such as ThreadPrimitive, ComposerPrimitive, and MessagePrimitive—it delegates comprehensive design ownership to the engineering team while abstracting the complex, stateful mechanics of token-by-token message streaming, thread history persistence, and scroll anchoring. Conversely, chatcn represents an alternative that prioritizes ready-to-use aesthetic layouts. Built directly on top of shadcn/ui and styled using Tailwind CSS, chatcn delivers highly structured layout presets, including specialized floatable chat widgets, sidebar components with presence indicators, and rich media attachment grids.
+Other specialized options include @llamaindex/chat-ui, which simplifies integration with streaming LLM backends via clean Tailwind configuration structures, and the highly modular react-chatbot-kit, which orchestrates conversational logic through a distinct three-tier setup of configuration objects, message parsers, and action providers. For deployment environments where a visual editor interface is used on the administrative backend, flowise-embed acts as a highly customizable wrapper that injects interactive chat bubbles or full-page interfaces directly connected to automated backend APIs.
+The following table contrasts these prominent lightweight frontend solutions to guide engineering selection for custom embedded configurations:
+| Technical Metric | assistant-ui | chatcn | @llamaindex/chat-ui | react-chatbot-kit | f[span_25](start_span)[span_25](end_span)[span_28](start_span)[span_28](end_span)lowise-embed |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Architectural Philosophy** | Headless primitives with full UI composition | Copy-and-paste components for rapid styling | Composable high-level section containers | Structured, config-driven state wrapper | Standalone, script-initialized embed widget |
+| **Primary Dependency Profile** | Zero styling opinions; pairs with any CSS engine | Radix UI primitives, Tailwind CSS | Tailwind CSS | Custom CSS / Styled Components | Tailwind CSS, Rollup runtime |
+| **Streaming Integration** | Native hook lifecycle hooks (useChat, custom runtimes) | Custom streaming state handling | Direct Vercel AI SDK wrappers (useChat) | Manual callback orchestration for API calls | Built-in streaming listener protocol |
+| **Typographical & Layout Control** | Complete; developer composes raw HTML nodes | High; direct access to source code of components | Medium; extended via custom React child nodes | Low; controlled via centralized config objects | Low; custom styling via overriding class rules |
+| **Typical Compressed Package Footprint** | Extremely low due to headless tree-shaking | Low; only compile active copied component files | Low to Medium | Low; highly modular package | Medium; includes visual runtime dependencies |
+Implementing a custom React plugin via assistant-ui yields the greatest architectural control, as it avoids locking the application into a specific CSS framework or preconfigured visual hierarchy, allowing developers to craft an interface that is indistinguishable from the host application's native design.
+## Standalone Embedding Architecture and Style Isolation
+Deploying a single, highly performant chat widget that executes seamlessly on arbitrary host web pages requires a deployment architecture that isolates the widget's internal environment from the host's script execution and CSS cascade. Without rigid isolation, global style resets, third-party frameworks like Bootstrap, or aggressive selectors (e.g., * { box-sizing: content-box !important; }) on the host page will distort the widget's visual layout.
+### Dynamic Host Insertion and Shadow DOM Mounting
+To establish a secure styling boundary, the widget must execute its initial mounting logic inside an isolated Shadow DOM v1 container. The bootstrap script, loaded asynchronously on the host page, executes a lifecycle sequence to inject the component tree:
+First, the script instantiates a host container element inside the host's Light DOM, typically appending a <div> directly as a child of the document.body to establish a root stacking context. This host element is positioned using CSS position: fixed along with an exceptionally high z-index (e.g., 999999) to guarantee visibility above parent document layouts, avoiding clipping hazards unless a parent container invokes nested 3D transformations.
+Second, the script attaches an open shadow root to this host container via element.attachShadow({ mode: 'open' }). This open boundary isolates the internal elements from the host document's querySelector queries while still permitting programmatic access through the host element's shadowRoot property.
+Third, a dedicated React root is mounted inside a child node of the shadow root, initializing the virtual DOM tree completely within this isolated document fragment. The widget host container is configured with the all: initial CSS reset, which neutralizes inherited typographic and visibility styles that would otherwise bleed from the host page across the shadow boundary.
+### Vite and Rollup IIFE Single-Bundle Strategy
+For a seamless, non-technical installation process, the widget must compile into a single self-executing bundle. Utilizing a bundler like Rollup or Vite, all Javascript, React runtime components, and compiled styling classes are packed into an Immediately Invoked Function Expression (IIFE). This IIFE executes instantly upon script evaluation, eliminating the need to load adjacent external asset files.
+The client website embeds the compiled file via a single, lightweight script tag:
+```html
+<script 
+  async 
+  defer 
+  src="https://cdn.example.com/chatbot-widget.js" 
+  data-client-key="enterprise_client_uuid"
+></script>
+
+```
+This async loading approach ensures the main browser thread on the host website remains unblocked during initial page parsing.
+### Style Injection via Constructable Stylesheets
+A primary challenge of utilizing utility-first CSS frameworks like Tailwind CSS inside a Shadow DOM is that compiled stylesheet rules cannot penetrate the shadow host boundary. For Tailwind CSS (particularly Tailwind v4, which relies on native CSS custom properties configured in @theme structures), the compiled CSS rules must be made available within the shadow tree itself.
+The modern standard to achieve this efficiently is the **Constructable Stylesheets API**. This API allows developers to programmatically create CSSStyleSheet objects directly in JavaScript, parse them once, and attach them to the shadow root using the adoptedStyleSheets array. This mechanism provides a significant performance advantage over inserting duplicate raw <style> elements, as the browser parses the compiled utility stylesheet exactly once in memory and shares the parsed reference across all instances of the components.
+The following implementation displays the dynamic bootstrap execution code, importing Tailwind CSS as an inline string at build time via Vite's ?inline parameter, attaching the shadow root, constructing the style layer, and parsing the host configuration attributes:
+```tsx
+import { createRoot } from 'react-dom/client';
+import { WidgetContainer } from './compon[span_91](start_span)[span_91](end_span)[span_93](start_span)[span_93](end_span)[span_95](start_span)[span_95](end_span)ents/widget-container';
+import tailwindStyleString from './styles/compiled-tailwind.css?inline'; // Build-time inline string import
+
+function bootstrapWidget() {
+  if (document.readyState !== 'loading') {
+    executeMount();
+  } else {
+    document.addEventListener('DOMContentLoaded', executeMount);
+  }
+}
+
+function executeMount() {
+  try {
+    const hostContainer = document.createElement('div');
+    hostContainer.id = 'chatbot-widget-shadow-host';
+    
+    // Style the light-DOM host to float over host-page layouts
+    hostContainer.style.position = 'fixed';
+    hostContainer.style.bottom = '24px';
+    hostContainer.style.right = '24px';
+    hostContainer.style.zIndex = '2147483647'; // Max integer z-index to stay on top
+    hostContainer.style.all = 'initial'; // Prevent host-page CSS resets from leaking in[span_110](start_span)[span_110](end_span)
+
+    const shadowRoot = hostContainer.attachShadow({ mode: 'open' });
+    const reactAppRoot = document.createElement('div');
+    reactAppRoot.id = 'widget-application-root';
+    shadowRoot.appendChild(reactAppRoot);
+
+    // Style Isolation using Constructable Stylesheets
+    if ('adoptedStyleSheets' in Document.prototype && 'replaceSync' in CSSStyleSheet.prototype) {
+      const globalSheet = new CSSStyleSheet();
+      globalSheet.replaceSync(tailwindStyleString);
+      shadowRoot.adoptedStyleSheets = [globalSheet];
+    } else {
+      // Legacy fallback for browsers without Constructable Stylesheet support[span_111](start_span)[span_111](end_span)
+      const styleTag = document.createElement('style');
+      styleTag.textContent = tailwindStyleString;
+      shadowRoot.appendChild(styleTag);
+    }
+
+    // Capture context variables directly off the script element attributes
+    const currentScript = document.currentScript as HTMLScriptElement;
+    const clientKey = currentScript?.getAttribute('data-client-key');
+    if (!clientKey) {
+      throw new Error('Chatbot execution terminated: missing data-client-key attribute.');
+    }
+
+    // Render the React application tree
+    const root = createRoot(reactAppRoot);
+    root.render(<WidgetContainer clientKey={clientKey} />);
+    
+    document.body.appendChild(hostContainer);
+  } catch (error) {
+    console.warn('Chatbot initialization encountered a critical error:', error);
+  }
+}
+
+bootstrapWidget();
+
+```
+## Rendering Adaptive Cards inside Custom React Chat UIs
+Adaptive Cards provide a schema-driven layout approach that allows backends to dispatch highly interactive visual cards using standard JSON payloads. Rather than embedding the heavy Microsoft Bot Framework Web Chat library to render these payloads, a custom React application can implement a lightweight wrapper around the official, standalone open-source JavaScript adaptivecards rendering SDK.
+The standalone SDK (npm install adaptivecards) parses the schema, applies layout rules structured in a shared, cross-platform HostConfig configuration object, and instantiates native browser HTML elements automatically.
+### Constructing the React Wrapper Component
+Because the adaptivecards SDK returns standard browser DOM elements, it cannot be rendered directly as standard React Virtual DOM nodes. Instead, the React application must declare a container wrapper that utilizes a React reference (useRef) and executes the rendering process within a useEffect layout hook. Whenever the card's JSON schema properties change, the layout hook wipes the container and appends the newly computed card element.
+The following React wrapper displays this rendering lifecycle, incorporating interactive submit handling, DirectLine content mapping, and markdown formatting:
+```tsx
+import { useEffect, useRef } from 'react';
+import * as AdaptiveCards from 'adaptivecards';
+import DOMPurify from 'dompurify';
+import { marked } from 'marked';
+
+// Centralized style mapping designed to match the application's aesthetic token values
+const widgetHostConfig = new AdaptiveCards.HostConfig({
+  fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+  supportsInteractivity: true,
+  fontSizes: { small: 12, default: 14, medium: 16, large: 18, extraLarge: 22 },
+  fontWeights: { lighter: 200, default: 400, bolder: 700 },
+  containerStyles: {
+    default: { backgroundColor: "#ffffff", foregroundColor: "#1f2937" },
+    emphasis: { backgroundColor: "#f3f4f6", foregroundColor: "#111827" }
+  },
+  actions: {
+    actionsOrientation: AdaptiveCards.ActionsOrientation.Horizontal,
+    actionAlignment: AdaptiveCards.ActionAlignment.Stretch,
+    maxActions: 4
+  }
+});
+
+interface AdaptiveCardWrapperProps {
+  cardPayload: object;
+  onCardSubmit: (data: object) => void;
+}
+
+export function AdaptiveCardWrapper({ cardPayload, onCardSubmit }: AdaptiveCardWrapperProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Flush previous element tree to prevent rendering duplicates on re-render[span_127](start_span)[span_127](end_span)
+    containerRef.current.innerHTML = '';
+
+    // DirectLine Mapping: Normalizes custom content schemas[span_128](start_span)[span_128](end_span)
+    let normalizedPayload = { ...cardPayload } as any;
+    if (normalizedPayload.contentType === 'application/vnd.microsoft.card.custom') {
+      normalizedPayload.contentType = 'application/vnd.microsoft.card.adaptive';
+    }
+
+    const adaptiveCard = new AdaptiveCards.AdaptiveCard();
+    adaptiveCard.hostConfig = widgetHostConfig;
+
+    // Secure Markdown Processing Protocol (CWE-79 Remediation)[span_129](start_span)[span_129](end_span)[span_131](start_span)[span_131](end_span)
+    AdaptiveCards.AdaptiveCard.onProcessMarkdown = (text, result) => {
+      try {
+        const rawCompiledHtml = marked.parse(text, { async: false }) as string;
+        // Strip out dangerous event attributes and script insertions[span_133](start_span)[span_133](end_span)[span_134](start_span)[span_134](end_span)
+        result.outputHtml = DOMPurify.sanitize(rawCompiledHtml);
+        result.didProcess = true; // Signals the SDK to render as HTML rather than raw text
+      } catch [span_130](start_span)[span_130](end_span)[span_132](start_span)[span_132](end_span)(error) {
+        console.error('Markdown processing failed:', error);
+        result.didProcess = false;
+      }
+    };
+
+    // Form submission callback handling[span_135](start_span)[span_135](end_span)[span_136](start_span)[span_136](end_span)[span_137](start_span)[span_137](end_span)
+    adaptiveCard.onExecuteAction = (action) => {
+      if (action instanceof AdaptiveCards.SubmitAction) {
+        // Collect all input elements in the card[span_138](start_span)[span_138](end_span)
+        const compiledInputs = action.data || {};
+        onCardSubmit(compiledInputs);
+
+        // Terminate interactivity to avoid double-submit or historical edits[span_139](start_span)[span_139](end_span)[span_141](start_span)[span_141](end_span)
+        if (containerRef.current) {
+          disableCardInputsAndButtons(containerRef.current);
+        }
+      }
+    };
+
+    try {
+      adaptiveCard.parse(normalizedPayload);
+      const nativeCardElement = adaptiveCard.render();
+      if (nativeCardElement) {
+        containerRef.current.appendChild(nativeCardElement);
+      }
+    } catch (parseError) {
+      console.error('Adaptive Card parsing exception:', parseError);
+      containerRef.current.textContent = 'Error rendering dynamic content.';
+    }
+  }, [cardPayload, onCardSubmit]);
+
+  return <div ref={containerRef} className="adaptive-card-container w-full bg-white shadow-sm border border-gray-100 rounded-lg overflow-hidden" />;
+}
+
+/**
+ * Traverses the card DOM tree, disabling input elements and buttons
+ * to prevent double submissions and state desynchronization.[span_140](start_span)[span_140](end_span)[span_142](start_span)[span_142](end_span)
+ */
+function disableCardInputsAndButtons(cardNode: HTMLElement) {
+  const interactiveElements = cardNode.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+    'button, input, select, textarea'
+  );
+
+  interactiveElements.forEach((element) => {
+    element.setAttribute('disabled', 'true');
+    element.style.opacity = '0.5';
+    element.style.cursor = 'not-allowed';
+    element.style.pointerEvents = 'none';
+  });
+
+  // Block clicks at the container boundary to prevent event propagation[span_143](start_span)[span_143](end_span)
+  cardNode.addEventListener(
+    'click',
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    { capture: true }
+  );
+}
+
+```
+## Enterprise SSO Integration and Secure Token Exchange
+Identifying and authorizing users inside a third-party embedded widget must be handled securely without duplicating credentials or compromising security boundaries. The widget must leverage the parent website's active Single Sign-On (SSO) session to obtain a valid identity context.
+### Client-Side Federated Authentication Protocol
+To identify and authorize users within an embedded context, the system delegates user authentication directly to the host website, which acts as the trusted first-party domain. When a user loads the host website, the parent page orchestrates authentication against its centralized Identity Provider (such as Microsoft Entra ID, Keycloak, or Okta) using its primary client library (e.g., Microsoft Authentication Library - MSAL).
+Once authenticated, the host website must securely provide identity context to the embedded chatbot widget. This is achieved using a **Federated Token Exchange Protocol**:
+```
++---------------+           +-----------------[span_146](start_span)[span_146](end_span)[span_150](start_span)[span_150](end_span)----+           +-----------------+
+|               |           |                     |           |                 |
+|  Host Website |           |    Chatbot Widget   |           | Chatbot Backend |
+|     (SPA)     |           |       (Client)      |           |     (Server)    |
+|               |           |                     |           |                 |
++-------+-------+           +----------+----------+           +--------+--------+
+        |                              |                               |
+        |  1. Request Localized Token   |                               |
+        |======------------------------>|                               |
+        |                              |                               |
+        |  2. Register JWT Provider    |                               |
+        |----------------------------->|                               |
+        |                              |                               |
+        |  3. Invoke setAuthTokenProv  |                               |
+        |  4. Resolve Short-Lived JWT  |                               |
+        |<-----------------------------|                               |
+        |                              |                               |
+        |                              |  5. Initiate Connection        |
+        |                              |=====------------------------->|
+        |                              |  6. JWT in Auth Header        |
+        |                              |                               |
+        |                              |                               |  7. Verify RSA256
+        |                              |                               |  using Host JWKS
+        |                              |                               |  endpoint
+        |                              |                               |---------\
+        |                              |                               |         |
+        |                              |                               |<--------/
+        |                              |                               |
+        |                              |  8. Connection Authorized     |
+        |                              |<------------------------------|
+
+```
+ 1. **JWT Generation:** The host website’s OIDC client fetches a specialized, short-lived JSON Web Token (JWT) from its token generation server. This JWT carries identity claims (such as sub, i[span_147](start_span)[span_147](end_span)[span_151](start_span)[span_151](end_span)ss, iat, and exp) and a payload representing serialized user attributes (e.g., lwicontexts containing variables for custom routing or agent assignment).
+ 2. **Dynamic Token Registration Callback:** The host website registers a client-side provider callback on the global scope after the widget is ready. On load, the widget triggers this callback, which resolves the JWT.
+ 3. **Public Key Verification (RSA256):** The chatbot widget client forwards this JWT to the chatbot backend server in the Authorization: Bearer <token> header. The chatbot backend verifies the token using the public key retrieved dynamically from the host’s JWKS (JSON Web Key Set) endpoint. This verification uses the RSA256 asymmetric cryptographic algorithm, ensuring that the backend can validate the token's signature without requiring access to the private signing key.
+The structure of the JSON Web Token payload required for secure identity propagation is detailed below:
+| JWT Claim Key | Data Type | Requirement | Technical Definition and Practical Implications |
+|---|---|---|---|
+| **iss** | String | Mandatory | **Issuer:** Identifies the principal authority that generated and signed the token, allowing the backend to match the token against trusted SSO providers. |
+| **sub** | String (GUID) | Mandatory | **Subject:** Represents the unique identifier of the user (e.g., account or contact ID). The backend maps this claim directly to user records in the target database. |
+| **iat** | Integer (Epoch) | Mandatory | **Issued At:** The exact Unix timestamp indicating when the JWT was generated, establishing a baseline for token age validation. |
+| **exp** | Integer (Epoch) | Mandatory | **Expiration Time:** Timestamp defining token validity. To minimize security risks if intercepted, lifetimes are restricted to short intervals (T_{expiry} \le 10 \text{ minutes}). |
+| **lwicontexts** | Object (JSON) | Optional | **Serialized Custom Context:** A key-value collection of primitive attributes. These values are used by routing and agent allocation engines to prioritize or assign conversations based on user tier or history. |
+### Mitigating Client-Side Security Threats (XSS & Origin Validation)
+To protect sensitive authentication tokens within the browser environment, the architecture must implement strict security controls:
+First, the embedded widget must **never persist tokens inside localStorage or sessionStorage**. Storage APIs are fully readable by any Javascript execution thread running in the same origin context. If an attacker successfully executes a Cross-Site Scripting (XSS) exploit, runs a malicious browser extension, or compromises a third-party npm dependency, they can exfiltrate the stored token and gain unauthorized access. The access token must be held **strictly in-memory** using scoped JavaScript variables or state frameworks.
+Second, when utilizing cross-origin messaging (such as window.postMessage between an iframe and the parent frame), the receiver must **always validate the origin** of the sender. Using wildcard origin selectors ("*") on the transmission side is strictly prohibited, as it allows arbitrary domains to capture the payload. The receiver must implement a strict origin match check, rejecting any message whose event.origin does not match the explicit URL of the trusted first-party host.
+### Safari ITP and Third-Party Cookie Bypass
+Modern tracking restrictions, such as Apple Safari's Intelligent Tracking Prevention (ITP) and Google Chrome's third-party cookie restrictions, prevent cross-origin embedded widgets from utilizing silent iframe refreshes or reading third-party cookies. When loaded inside an iframe or cross-origin script context, any attempt to read state from a domain-associated cookie is blocked by the browser.
+To resolve Safari ITP compatibility, the chatbot widget architecture must utilize a **Parent-Mediated Token Exchange Protocol**:
+First, the widget relies solely on short-lived access tokens stored in-memory.
+Second, when the access token is near expiration, the widget initiates a request by sending a targeted postMessage command up to the parent host website.
+Third, because the parent host operates in a first-party context, it does not suffer from third-party cookie restrictions. The parent context securely initiates a silent session fetch or hits its first-party token endpoint to obtain a fresh access token from the Identity Provider.
+Fourth, once acquired, the parent host posts the fresh token back down to the widget's secure message listener, which updates its in-memory reference.
+This protocol allows the widget to safely maintain authorized sessions across all major browsers, avoiding cookie blocking while keeping token lifetimes short to minimize security exposure.
+## Architectural Synthesis and Security Checklist
+The successful execution of a lightweight, highly isolated, and securely authenticated chatbot widget relies on enforcing structural boundaries across the entire rendering and authentication life cycle.
+The final system design is summarized in the following engineering architectural workflow diagram:
+```
+HOST DOM (LIGHT DOM)
+┌────────────────────────────────────────────────────────────────────────┐
+│  Host Page CSS: body { font-size: 10px; button { background: red; } }  │
+│                                                                        │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │ Chatbot Host Node (all: initial)                                 │  │
+│  │   SHADOW DOM BOUNDARY                                            │  │
+│  │   ┌──────────────────────────────────────────────────────────┐   │  │
+│  │   │ CSSStyleSheet (adoptedStyleSheets)                       │   │  │
+│  │   │   :host { font-size: 16px; button { background: blue; } }│   │  │
+│  │   │ ├────────────────────────────────────────────────────────┤   │  │
+│  │   │ │ React Application Tree                                 │   │  │
+│  │   │ │                                                        │   │  │
+│  │   │ │  ┌───────────────┐        ┌─────────────────────────┐  │   │  │
+│  │   │ │  │               │        │ Adaptive Card Container │  │   │  │
+│  │   │ │  │ Chat History  │        │   ┌───────────────────┐ │  │   │  │
+│  │   │ │  │    (Prose)    │        │   │ onProcessMarkdown │ │  │   │  │
+│  │   │ │  │               │        │   │ (marked+DOMPurify)│ │  │   │  │
+│  │   │ │  └───────────────┘        │   │ [CWE-79 Sanitized]│ │  │   │  │
+│  │   │ │                           │   └───────────────────┘ │  │   │  │
+│  │   │ │                           │   ┌───────────────────┐ │  │   │  │
+│  │   │ │                           │   │  Input Disabling  │ │  │   │  │
+│  │   │ │                           │   │  [Transience Lock]│ │  │   │  │
+│  │   │ │                           │   └───────────────────┘ │  │   │  │
+│  │   │ │                           └─────────────────────────┘  │   │  │
+│  │   │ └────────────────────────────────────────────────────────┘   │  │
+│  │   └──────────────────────────────────────────────────────────┘   │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────┘
+
+```
+This structural separation ensures that global host styles—such as the red button backgrounds or scaled font sizes—are blocked at the shadow boundary, allowing the widget to render consistently with its own scoped styles. Concurrently, markdown content is compiled and sanitized before insertion, protecting the widget from script injections and DOM-based exploits.
+By combining headless React rendering, constructable style isolation, safe markdown processing, and federated, parent-mediated SSO token verification, developers can deliver a high-performance chat interface. This unified architecture provides strict isolation and security controls while maintaining a lightweight client-side footprint.
