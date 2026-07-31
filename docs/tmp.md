@@ -4,13 +4,15 @@ When designing a modern, high-performance embedded chat plugin, minimizing the c
 The selection of a lightweight chat UI library depends heavily on the desired balance between architectural flexibility and out-of-the-box UI completeness. The library assistant-ui represents a prominent solution, adhering to a headless UI paradigm similar to Radix. By exposing unstyled, highly accessible primitive components—such as ThreadPrimitive, ComposerPrimitive, and MessagePrimitive—it delegates comprehensive design ownership to the engineering team while abstracting the complex, stateful mechanics of token-by-token message streaming, thread history persistence, and scroll anchoring. Conversely, chatcn represents an alternative that prioritizes ready-to-use aesthetic layouts. Built directly on top of shadcn/ui and styled using Tailwind CSS, chatcn delivers highly structured layout presets, including specialized floatable chat widgets, sidebar components with presence indicators, and rich media attachment grids.
 Other specialized options include @llamaindex/chat-ui, which simplifies integration with streaming LLM backends via clean Tailwind configuration structures, and the highly modular react-chatbot-kit, which orchestrates conversational logic through a distinct three-tier setup of configuration objects, message parsers, and action providers. For deployment environments where a visual editor interface is used on the administrative backend, flowise-embed acts as a highly customizable wrapper that injects interactive chat bubbles or full-page interfaces directly connected to automated backend APIs.
 The following table contrasts these prominent lightweight frontend solutions to guide engineering selection for custom embedded configurations:
-| Technical Metric | assistant-ui | chatcn | @llamaindex/chat-ui | react-chatbot-kit | f[span_25](start_span)[span_25](end_span)[span_28](start_span)[span_28](end_span)lowise-embed |
+
+| Technical Metric | assistant-ui | chatcn | @llamaindex/chat-ui | react-chatbot-kit | flowise-embed |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Architectural Philosophy** | Headless primitives with full UI composition | Copy-and-paste components for rapid styling | Composable high-level section containers | Structured, config-driven state wrapper | Standalone, script-initialized embed widget |
 | **Primary Dependency Profile** | Zero styling opinions; pairs with any CSS engine | Radix UI primitives, Tailwind CSS | Tailwind CSS | Custom CSS / Styled Components | Tailwind CSS, Rollup runtime |
 | **Streaming Integration** | Native hook lifecycle hooks (useChat, custom runtimes) | Custom streaming state handling | Direct Vercel AI SDK wrappers (useChat) | Manual callback orchestration for API calls | Built-in streaming listener protocol |
 | **Typographical & Layout Control** | Complete; developer composes raw HTML nodes | High; direct access to source code of components | Medium; extended via custom React child nodes | Low; controlled via centralized config objects | Low; custom styling via overriding class rules |
 | **Typical Compressed Package Footprint** | Extremely low due to headless tree-shaking | Low; only compile active copied component files | Low to Medium | Low; highly modular package | Medium; includes visual runtime dependencies |
+
 Implementing a custom React plugin via assistant-ui yields the greatest architectural control, as it avoids locking the application into a specific CSS framework or preconfigured visual hierarchy, allowing developers to craft an interface that is indistinguishable from the host application's native design.
 ## Standalone Embedding Architecture and Style Isolation
 Deploying a single, highly performant chat widget that executes seamlessly on arbitrary host web pages requires a deployment architecture that isolates the widget's internal environment from the host's script execution and CSS cascade. Without rigid isolation, global style resets, third-party frameworks like Bootstrap, or aggressive selectors (e.g., * { box-sizing: content-box !important; }) on the host page will distort the widget's visual layout.
@@ -38,7 +40,7 @@ The modern standard to achieve this efficiently is the **Constructable Styleshee
 The following implementation displays the dynamic bootstrap execution code, importing Tailwind CSS as an inline string at build time via Vite's ?inline parameter, attaching the shadow root, constructing the style layer, and parsing the host configuration attributes:
 ```tsx
 import { createRoot } from 'react-dom/client';
-import { WidgetContainer } from './compon[span_91](start_span)[span_91](end_span)[span_93](start_span)[span_93](end_span)[span_95](start_span)[span_95](end_span)ents/widget-container';
+import { WidgetContainer } from './components/widget-container';
 import tailwindStyleString from './styles/compiled-tailwind.css?inline'; // Build-time inline string import
 
 function bootstrapWidget() {
@@ -59,7 +61,7 @@ function executeMount() {
     hostContainer.style.bottom = '24px';
     hostContainer.style.right = '24px';
     hostContainer.style.zIndex = '2147483647'; // Max integer z-index to stay on top
-    hostContainer.style.all = 'initial'; // Prevent host-page CSS resets from leaking in[span_110](start_span)[span_110](end_span)
+    hostContainer.style.all = 'initial'; // Prevent host-page CSS resets from leaking in
 
     const shadowRoot = hostContainer.attachShadow({ mode: 'open' });
     const reactAppRoot = document.createElement('div');
@@ -72,7 +74,7 @@ function executeMount() {
       globalSheet.replaceSync(tailwindStyleString);
       shadowRoot.adoptedStyleSheets = [globalSheet];
     } else {
-      // Legacy fallback for browsers without Constructable Stylesheet support[span_111](start_span)[span_111](end_span)
+      // Legacy fallback for browsers without Constructable Stylesheet support
       const styleTag = document.createElement('style');
       styleTag.textContent = tailwindStyleString;
       shadowRoot.appendChild(styleTag);
@@ -138,10 +140,10 @@ export function AdaptiveCardWrapper({ cardPayload, onCardSubmit }: AdaptiveCardW
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Flush previous element tree to prevent rendering duplicates on re-render[span_127](start_span)[span_127](end_span)
+    // Flush previous element tree to prevent rendering duplicates on re-render
     containerRef.current.innerHTML = '';
 
-    // DirectLine Mapping: Normalizes custom content schemas[span_128](start_span)[span_128](end_span)
+    // DirectLine Mapping: Normalizes custom content schemas
     let normalizedPayload = { ...cardPayload } as any;
     if (normalizedPayload.contentType === 'application/vnd.microsoft.card.custom') {
       normalizedPayload.contentType = 'application/vnd.microsoft.card.adaptive';
@@ -150,27 +152,27 @@ export function AdaptiveCardWrapper({ cardPayload, onCardSubmit }: AdaptiveCardW
     const adaptiveCard = new AdaptiveCards.AdaptiveCard();
     adaptiveCard.hostConfig = widgetHostConfig;
 
-    // Secure Markdown Processing Protocol (CWE-79 Remediation)[span_129](start_span)[span_129](end_span)[span_131](start_span)[span_131](end_span)
+    // Secure Markdown Processing Protocol (CWE-79 Remediation)
     AdaptiveCards.AdaptiveCard.onProcessMarkdown = (text, result) => {
       try {
         const rawCompiledHtml = marked.parse(text, { async: false }) as string;
-        // Strip out dangerous event attributes and script insertions[span_133](start_span)[span_133](end_span)[span_134](start_span)[span_134](end_span)
+        // Strip out dangerous event attributes and script insertions
         result.outputHtml = DOMPurify.sanitize(rawCompiledHtml);
         result.didProcess = true; // Signals the SDK to render as HTML rather than raw text
-      } catch [span_130](start_span)[span_130](end_span)[span_132](start_span)[span_132](end_span)(error) {
+      } catch (error) {
         console.error('Markdown processing failed:', error);
         result.didProcess = false;
       }
     };
 
-    // Form submission callback handling[span_135](start_span)[span_135](end_span)[span_136](start_span)[span_136](end_span)[span_137](start_span)[span_137](end_span)
+    // Form submission callback handling
     adaptiveCard.onExecuteAction = (action) => {
       if (action instanceof AdaptiveCards.SubmitAction) {
-        // Collect all input elements in the card[span_138](start_span)[span_138](end_span)
+        // Collect all input elements in the card
         const compiledInputs = action.data || {};
         onCardSubmit(compiledInputs);
 
-        // Terminate interactivity to avoid double-submit or historical edits[span_139](start_span)[span_139](end_span)[span_141](start_span)[span_141](end_span)
+        // Terminate interactivity to avoid double-submit or historical edits
         if (containerRef.current) {
           disableCardInputsAndButtons(containerRef.current);
         }
@@ -194,7 +196,7 @@ export function AdaptiveCardWrapper({ cardPayload, onCardSubmit }: AdaptiveCardW
 
 /**
  * Traverses the card DOM tree, disabling input elements and buttons
- * to prevent double submissions and state desynchronization.[span_140](start_span)[span_140](end_span)[span_142](start_span)[span_142](end_span)
+ * to prevent double submissions and state desynchronization.
  */
 function disableCardInputsAndButtons(cardNode: HTMLElement) {
   const interactiveElements = cardNode.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
@@ -208,7 +210,7 @@ function disableCardInputsAndButtons(cardNode: HTMLElement) {
     element.style.pointerEvents = 'none';
   });
 
-  // Block clicks at the container boundary to prevent event propagation[span_143](start_span)[span_143](end_span)
+  // Block clicks at the container boundary to prevent event propagation
   cardNode.addEventListener(
     'click',
     (event) => {
@@ -225,8 +227,8 @@ Identifying and authorizing users inside a third-party embedded widget must be h
 ### Client-Side Federated Authentication Protocol
 To identify and authorize users within an embedded context, the system delegates user authentication directly to the host website, which acts as the trusted first-party domain. When a user loads the host website, the parent page orchestrates authentication against its centralized Identity Provider (such as Microsoft Entra ID, Keycloak, or Okta) using its primary client library (e.g., Microsoft Authentication Library - MSAL).
 Once authenticated, the host website must securely provide identity context to the embedded chatbot widget. This is achieved using a **Federated Token Exchange Protocol**:
-```
-+---------------+           +-----------------[span_146](start_span)[span_146](end_span)[span_150](start_span)[span_150](end_span)----+           +-----------------+
+```text
++---------------+           +---------------------+           +-----------------+
 |               |           |                     |           |                 |
 |  Host Website |           |    Chatbot Widget   |           | Chatbot Backend |
 |     (SPA)     |           |       (Client)      |           |     (Server)    |
@@ -258,10 +260,11 @@ Once authenticated, the host website must securely provide identity context to t
         |                              |<------------------------------|
 
 ```
- 1. **JWT Generation:** The host website’s OIDC client fetches a specialized, short-lived JSON Web Token (JWT) from its token generation server. This JWT carries identity claims (such as sub, i[span_147](start_span)[span_147](end_span)[span_151](start_span)[span_151](end_span)ss, iat, and exp) and a payload representing serialized user attributes (e.g., lwicontexts containing variables for custom routing or agent assignment).
- 2. **Dynamic Token Registration Callback:** The host website registers a client-side provider callback on the global scope after the widget is ready. On load, the widget triggers this callback, which resolves the JWT.
- 3. **Public Key Verification (RSA256):** The chatbot widget client forwards this JWT to the chatbot backend server in the Authorization: Bearer <token> header. The chatbot backend verifies the token using the public key retrieved dynamically from the host’s JWKS (JSON Web Key Set) endpoint. This verification uses the RSA256 asymmetric cryptographic algorithm, ensuring that the backend can validate the token's signature without requiring access to the private signing key.
+1. **JWT Generation:** The host website’s OIDC client fetches a specialized, short-lived JSON Web Token (JWT) from its token generation server. This JWT carries identity claims (such as sub, iss, iat, and exp) and a payload representing serialized user attributes (e.g., lwicontexts containing variables for custom routing or agent assignment).
+2. **Dynamic Token Registration Callback:** The host website registers a client-side provider callback on the global scope after the widget is ready. On load, the widget triggers this callback, which resolves the JWT.
+3. **Public Key Verification (RSA256):** The chatbot widget client forwards this JWT to the chatbot backend server in the Authorization: Bearer <token> header. The chatbot backend verifies the token using the public key retrieved dynamically from the host’s JWKS (JSON Web Key Set) endpoint. This verification uses the RSA256 asymmetric cryptographic algorithm, ensuring that the backend can validate the token's signature without requiring access to the private signing key.
 The structure of the JSON Web Token payload required for secure identity propagation is detailed below:
+
 | JWT Claim Key | Data Type | Requirement | Technical Definition and Practical Implications |
 |---|---|---|---|
 | **iss** | String | Mandatory | **Issuer:** Identifies the principal authority that generated and signed the token, allowing the backend to match the token against trusted SSO providers. |
@@ -269,6 +272,7 @@ The structure of the JSON Web Token payload required for secure identity propaga
 | **iat** | Integer (Epoch) | Mandatory | **Issued At:** The exact Unix timestamp indicating when the JWT was generated, establishing a baseline for token age validation. |
 | **exp** | Integer (Epoch) | Mandatory | **Expiration Time:** Timestamp defining token validity. To minimize security risks if intercepted, lifetimes are restricted to short intervals (T_{expiry} \le 10 \text{ minutes}). |
 | **lwicontexts** | Object (JSON) | Optional | **Serialized Custom Context:** A key-value collection of primitive attributes. These values are used by routing and agent allocation engines to prioritize or assign conversations based on user tier or history. |
+
 ### Mitigating Client-Side Security Threats (XSS & Origin Validation)
 To protect sensitive authentication tokens within the browser environment, the architecture must implement strict security controls:
 First, the embedded widget must **never persist tokens inside localStorage or sessionStorage**. Storage APIs are fully readable by any Javascript execution thread running in the same origin context. If an attacker successfully executes a Cross-Site Scripting (XSS) exploit, runs a malicious browser extension, or compromises a third-party npm dependency, they can exfiltrate the stored token and gain unauthorized access. The access token must be held **strictly in-memory** using scoped JavaScript variables or state frameworks.
@@ -284,7 +288,7 @@ This protocol allows the widget to safely maintain authorized sessions across al
 ## Architectural Synthesis and Security Checklist
 The successful execution of a lightweight, highly isolated, and securely authenticated chatbot widget relies on enforcing structural boundaries across the entire rendering and authentication life cycle.
 The final system design is summarized in the following engineering architectural workflow diagram:
-```
+```text
 HOST DOM (LIGHT DOM)
 ┌────────────────────────────────────────────────────────────────────────┐
 │  Host Page CSS: body { font-size: 10px; button { background: red; } }  │
